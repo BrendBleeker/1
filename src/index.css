@@ -1,0 +1,98 @@
+:root {
+  --tekst: #1f2a24;
+  --tekst-zacht: #5b6660;
+  --achtergrond: #ffffff;
+  --paneel: #f5f7f4;
+  --rand: #dfe4dd;
+  --accent: #2e7d4f;
+  --gebied: #d35400;
+
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--tekst);
+  background: var(--achtergrond);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+.app {
+  display: flex;
+  height: 100%;
+}
+
+.zijpaneel {
+  width: 340px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 1.25rem;
+  background: var(--paneel);
+  border-right: 1px solid var(--rand);
+}
+
+.zijpaneel h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.zijpaneel h2 {
+  font-size: 1.05rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.ondertitel {
+  margin: 0.2rem 0 0;
+  color: var(--tekst-zacht);
+}
+
+.uitleg ol {
+  padding-left: 1.2rem;
+}
+
+.kerngegevens {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 1rem;
+  margin: 0;
+}
+
+.kerngegevens dt {
+  color: var(--tekst-zacht);
+}
+
+.kerngegevens dd {
+  margin: 0;
+}
+
+.kaart-container {
+  flex: 1;
+  position: relative;
+}
+
+.kaart {
+  height: 100%;
+  width: 100%;
+}
+
+/* Op een smal scherm (telefoon) paneel boven de kaart */
+@media (max-width: 700px) {
+  .app {
+    flex-direction: column;
+  }
+  .zijpaneel {
+    width: 100%;
+    max-height: 40%;
+    border-right: none;
+    border-bottom: 1px solid var(--rand);
+  }
+}
