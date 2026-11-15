@@ -6,177 +6,336 @@
       "wetenschappelijkeNaam": "Pipistrellus pipistrellus",
       "nederlandseNaam": "Gewone dwergvleermuis",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [5, 6, 7, 8, 9],
+      "profiel": "vleermuizen-gebouw",
+      "onderzoeksmaanden": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Kraamperiode ca. 15 mei – 15 juli, paarperiode ca. 15 augustus – 1 oktober; meerdere bezoeken volgens het Vleermuisprotocol."
     },
     {
       "wetenschappelijkeNaam": "Pipistrellus nathusii",
       "nederlandseNaam": "Ruige dwergvleermuis",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [5, 6, 7, 8, 9],
+      "profiel": "vleermuizen-boom",
+      "onderzoeksmaanden": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Vooral paarverblijven in de nazomer (ca. 15 augustus – 1 oktober); zomerperiode volgens het Vleermuisprotocol."
     },
     {
       "wetenschappelijkeNaam": "Eptesicus serotinus",
       "nederlandseNaam": "Laatvlieger",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [5, 6, 7, 8, 9],
+      "profiel": "vleermuizen-gebouw",
+      "onderzoeksmaanden": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Kraamperiode ca. 15 mei – 15 juli; zomer- en paarperiode volgens het Vleermuisprotocol."
     },
     {
       "wetenschappelijkeNaam": "Nyctalus noctula",
       "nederlandseNaam": "Rosse vleermuis",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [5, 6, 7, 8, 9],
+      "profiel": "vleermuizen-boom",
+      "onderzoeksmaanden": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Boombewonend; kraam- en paarverblijven in boomholtes. Zomer- en paarperiode volgens het Vleermuisprotocol."
     },
     {
       "wetenschappelijkeNaam": "Plecotus auritus",
       "nederlandseNaam": "Gewone grootoorvleermuis",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [5, 6, 7, 8, 9],
+      "profiel": "vleermuizen-gebouw",
+      "onderzoeksmaanden": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Zomerperiode volgens het Vleermuisprotocol; winterverblijven (kelders, bunkers) controleren in december – februari."
     },
     {
       "wetenschappelijkeNaam": "Myotis daubentonii",
       "nederlandseNaam": "Watervleermuis",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [5, 6, 7, 8, 9],
+      "profiel": "vleermuizen-boom",
+      "onderzoeksmaanden": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Vliegroutes en foerageergebied boven water; verblijfplaatsen in bomen. Zomerperiode volgens het Vleermuisprotocol."
     },
     {
       "wetenschappelijkeNaam": "Meles meles",
       "nederlandseNaam": "Das",
       "regime": "Nationaal",
-      "onderzoeksmaanden": [1, 2, 3, 4, 11, 12],
+      "profiel": "zoogdieren",
+      "onderzoeksmaanden": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
       "toelichting": "Burchten en sporen het best zichtbaar bij lage vegetatie (ca. november – april). Let op provinciale vrijstellingen."
     },
     {
       "wetenschappelijkeNaam": "Martes foina",
       "nederlandseNaam": "Steenmarter",
       "regime": "Nationaal",
-      "onderzoeksmaanden": [2, 3, 4, 5, 6],
+      "profiel": "zoogdieren",
+      "onderzoeksmaanden": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
       "toelichting": "Verblijfplaatsen in gebouwen; sporen- en cameraonderzoek in principe jaarrond mogelijk, voorjaar het meest geschikt."
     },
     {
       "wetenschappelijkeNaam": "Sciurus vulgaris",
       "nederlandseNaam": "Eekhoorn",
       "regime": "Nationaal",
-      "onderzoeksmaanden": [2, 3, 4, 5],
+      "profiel": "zoogdieren",
+      "onderzoeksmaanden": [
+        2,
+        3,
+        4,
+        5
+      ],
       "toelichting": "Nesten (kobels) zoeken bij weinig blad; daarna controleren op gebruik."
     },
     {
       "wetenschappelijkeNaam": "Epidalea calamita",
       "nederlandseNaam": "Rugstreeppad",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [4, 5, 6, 7, 8],
+      "profiel": "amfibieen",
+      "onderzoeksmaanden": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
       "toelichting": "Roepende mannetjes april – juni (warme avonden), larven mei – augustus. Pionierssoort: ook op bouwterreinen."
     },
     {
       "wetenschappelijkeNaam": "Triturus cristatus",
       "nederlandseNaam": "Kamsalamander",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [3, 4, 5, 6, 7],
+      "profiel": "amfibieen",
+      "onderzoeksmaanden": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
       "toelichting": "Adulten in het water ca. april – juni (schepnet, fuiken, eDNA); larven tot in juli."
     },
     {
       "wetenschappelijkeNaam": "Rana arvalis",
       "nederlandseNaam": "Heikikker",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [3, 4],
+      "profiel": "amfibieen",
+      "onderzoeksmaanden": [
+        3,
+        4
+      ],
       "toelichting": "Korte roep- en paarperiode in maart – april."
     },
     {
       "wetenschappelijkeNaam": "Pelophylax lessonae",
       "nederlandseNaam": "Poelkikker",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [5, 6],
+      "profiel": "amfibieen",
+      "onderzoeksmaanden": [
+        5,
+        6
+      ],
       "toelichting": "Roepende dieren mei – juni; determinatie lastig (groene kikkers)."
     },
     {
       "wetenschappelijkeNaam": "Hyla arborea",
       "nederlandseNaam": "Boomkikker",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [4, 5, 6],
+      "profiel": "amfibieen",
+      "onderzoeksmaanden": [
+        4,
+        5,
+        6
+      ],
       "toelichting": "Roepende mannetjes april – juni, vooral op warme avonden."
     },
     {
       "wetenschappelijkeNaam": "Natrix helvetica",
-      "synoniemen": ["Natrix natrix"],
+      "synoniemen": [
+        "Natrix natrix"
+      ],
       "nederlandseNaam": "Ringslang",
       "regime": "Nationaal",
-      "onderzoeksmaanden": [4, 5, 6, 7, 8, 9],
+      "profiel": "reptielen",
+      "onderzoeksmaanden": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Zonnende dieren in het voorjaar (april – mei) en nazomer; broeihopen controleren."
     },
     {
       "wetenschappelijkeNaam": "Lacerta agilis",
       "nederlandseNaam": "Zandhagedis",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [4, 5, 6, 7, 8, 9],
+      "profiel": "reptielen",
+      "onderzoeksmaanden": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Bij voorkeur april – juni en augustus – september, bij zonnig weer in de ochtend."
     },
     {
       "wetenschappelijkeNaam": "Zootoca vivipara",
       "nederlandseNaam": "Levendbarende hagedis",
       "regime": "Nationaal",
-      "onderzoeksmaanden": [4, 5, 6, 7, 8, 9],
+      "profiel": "reptielen",
+      "onderzoeksmaanden": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
       "toelichting": "Zonnige ochtenden van april tot september."
     },
     {
       "wetenschappelijkeNaam": "Passer domesticus",
       "nederlandseNaam": "Huismus",
       "regime": "Vogelrichtlijn",
-      "onderzoeksmaanden": [4, 5],
+      "profiel": "jaarrond-nesten",
+      "onderzoeksmaanden": [
+        4,
+        5
+      ],
       "toelichting": "Jaarrond beschermde nestplaats. Onderzoek ca. 1 april – 20 mei, minimaal twee bezoeken in de ochtend."
     },
     {
       "wetenschappelijkeNaam": "Apus apus",
       "nederlandseNaam": "Gierzwaluw",
       "regime": "Vogelrichtlijn",
-      "onderzoeksmaanden": [6, 7],
+      "profiel": "jaarrond-nesten",
+      "onderzoeksmaanden": [
+        6,
+        7
+      ],
       "toelichting": "Jaarrond beschermde nestplaats. Onderzoek ca. 1 juni – 15 juli, vooral 's avonds."
     },
     {
       "wetenschappelijkeNaam": "Tyto alba",
       "nederlandseNaam": "Kerkuil",
       "regime": "Vogelrichtlijn",
-      "onderzoeksmaanden": [3, 4, 5, 6, 7],
+      "profiel": "jaarrond-nesten",
+      "onderzoeksmaanden": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
       "toelichting": "Jaarrond beschermde nestplaats. Sporen (braakballen, uitwerpselen) zijn jaarrond te vinden; broedcontrole in het broedseizoen."
     },
     {
       "wetenschappelijkeNaam": "Athene noctua",
       "nederlandseNaam": "Steenuil",
       "regime": "Vogelrichtlijn",
-      "onderzoeksmaanden": [2, 3, 4],
+      "profiel": "jaarrond-nesten",
+      "onderzoeksmaanden": [
+        2,
+        3,
+        4
+      ],
       "toelichting": "Jaarrond beschermde nestplaats. Territoriumroep (eventueel met geluid) ca. februari – april."
     },
     {
       "wetenschappelijkeNaam": "Asio otus",
       "nederlandseNaam": "Ransuil",
       "regime": "Vogelrichtlijn",
-      "onderzoeksmaanden": [3, 4, 5, 6],
+      "profiel": "jaarrond-nesten",
+      "onderzoeksmaanden": [
+        3,
+        4,
+        5,
+        6
+      ],
       "toelichting": "Jaarrond beschermde nestplaats. Baltsroep in maart – april, bedelende jongen mei – juni."
     },
     {
       "wetenschappelijkeNaam": "Buteo buteo",
       "nederlandseNaam": "Buizerd",
       "regime": "Vogelrichtlijn",
-      "onderzoeksmaanden": [2, 3, 4],
+      "profiel": "jaarrond-nesten",
+      "onderzoeksmaanden": [
+        2,
+        3,
+        4
+      ],
       "toelichting": "Jaarrond beschermde nestplaats. Horsten zoeken in de bladloze periode, bezetting controleren in het voorjaar."
     },
     {
       "wetenschappelijkeNaam": "Accipiter gentilis",
       "nederlandseNaam": "Havik",
       "regime": "Vogelrichtlijn",
-      "onderzoeksmaanden": [2, 3, 4],
+      "profiel": "jaarrond-nesten",
+      "onderzoeksmaanden": [
+        2,
+        3,
+        4
+      ],
       "toelichting": "Jaarrond beschermde nestplaats. Horsten zoeken in de bladloze periode, bezetting controleren in het voorjaar."
     },
     {
       "wetenschappelijkeNaam": "Helosciadium repens",
-      "synoniemen": ["Apium repens"],
+      "synoniemen": [
+        "Apium repens"
+      ],
       "nederlandseNaam": "Kruipend moerasscherm",
       "regime": "Habitatrichtlijn bijlage IV",
-      "onderzoeksmaanden": [7, 8, 9],
+      "profiel": "planten",
+      "onderzoeksmaanden": [
+        7,
+        8,
+        9
+      ],
       "toelichting": "Bloeiperiode juli – september; vooral in kort begraasde, natte graslanden."
     }
   ]

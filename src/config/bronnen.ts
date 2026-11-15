@@ -133,3 +133,13 @@ export const UNIELIJST = {
   naam: 'List of Invasive Alien Species of Union concern (INBO, via GBIF)',
   datasetKey: '79d65658-526c-4c78-9d24-1870d67f8439',
 }
+
+/**
+ * Open-Meteo weersverwachting (gratis, zonder account, voor niet-commercieel gebruik).
+ * https://open-meteo.com/en/docs  – endpoint /v1/forecast, uurwaarden als parallelle lijsten.
+ */
+export const OPEN_METEO = {
+  naam: 'Open-Meteo weersverwachting',
+  forecastUrl: 'https://api.open-meteo.com/v1/forecast',
+  maxDagen: 16,
+}

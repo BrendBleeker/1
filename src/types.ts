@@ -1,3 +1,5 @@
+import type { ProfielId } from './utils/profielen'
+
 // Gedeelde datatypes voor de hele app.
 
 /** De soortgroepen waarop de soortenlijst gegroepeerd kan worden. */
@@ -32,6 +34,8 @@ export interface BeschermdeSoort {
   synoniemen?: string[]
   nederlandseNaam: string
   regime: Beschermingsregime
+  /** Kwetsbaarheidsprofiel voor de werkkalender en de conclusie */
+  profiel: ProfielId
   /** Maanden (1 = januari … 12 = december) waarin onderzoek geschikt is */
   onderzoeksmaanden: number[]
   toelichting: string

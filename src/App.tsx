@@ -16,6 +16,14 @@ import { haalUnielijstOp } from './services/exoten'
 import { useHabitat } from './hooks/useHabitat'
 import HabitatPaneel from './components/HabitatPaneel'
 import ExotenPaneel from './components/ExotenPaneel'
+import VeldPlanner from './components/VeldPlanner'
+import WerkKalender from './components/WerkKalender'
+import VeldChecklist from './components/VeldChecklist'
+import ConclusiePaneel from './components/ConclusiePaneel'
+import { LEGE_VELDGEGEVENS, type VeldGegevens } from './data/veldchecklist'
+import { relevanteProfielen } from './utils/relevanteProfielen'
+import { genereerConclusie } from './utils/conclusie'
+import { formatAfstand } from './utils/geometrie'
 
 // Een plangebied uit een gedeelde link (eenmalig bij het openen van de app)
 const uitLink = leesDeellink()
@@ -112,6 +120,41 @@ export default function App() {
 
   const soortenPerKey = useMemo(() => new Map(soorten.map((s) => [s.key, s])), [soorten])
 
+  // Veldbezoek: checklist, notities, foto's en conclusie
+  const [veld, setVeld] = useState<VeldGegevens>(LEGE_VELDGEGEVENS)
+
+  // Welke soortgroepen spelen hier, en waarom (soorten, habitat, veld)
+  const profielen = useMemo(
+    () =>
+      relevanteProfielen(
+        soorten,
+        habitat.status.soort === 'klaar' ? habitat.status.resultaat.potentie : [],
+        veld,
+      ),
+    [soorten, habitat.status, veld],
+  )
+  const natura2000Tekst =
+    natura2000.status.soort !== 'klaar'
+      ? 'Natura 2000 nog niet gecontroleerd.'
+      : natura2000.status.gebieden.length === 0
+        ? 'geen Natura 2000-gebied in of binnen 1 km; beoordeel externe effecten zoals stikstof apart.'
+        : `${natura2000.status.gebieden
+            .map(
+              (g) => `${g.naam} (${g.overlapt ? 'overlapt' : `op ± ${formatAfstand(g.afstandM)}`})`,
+            )
+            .join(
+              ', ',
+            )}; toets effecten (o.a. stikstof, verstoring). Ligging t.o.v. NNN visueel beoordelen.`
+  const automatischeConclusie = useMemo(
+    () =>
+      genereerConclusie(
+        profielen,
+        natura2000Tekst,
+        soorten.filter((s) => s.exoot).map((s) => s.nederlandseNaam ?? s.wetenschappelijkeNaam),
+      ),
+    [profielen, natura2000Tekst, soorten],
+  )
+
   return (
     <>
       <div
@@ -158,6 +201,30 @@ export default function App() {
               />
             ),
             soorten: <ExotenPaneel soorten={soorten} fout={unielijstFout} />,
+            planning: gebied && (
+              <>
+                <VeldPlanner gebied={gebied} soorten={soorten} />
+                <section>
+                  <h2>Werkkalender</h2>
+                  <p className="voetnoot">
+                    Wanneer geven werkzaamheden (sloop, kap, grondwerk) het minste risico voor de
+                    soortgroepen die hier spelen?
+                  </p>
+                  <WerkKalender profielen={profielen} compact />
+                </section>
+              </>
+            ),
+            veld: (
+              <>
+                <VeldChecklist veld={veld} onWijzig={setVeld} />
+                <ConclusiePaneel
+                  profielen={profielen}
+                  conclusie={veld.conclusie}
+                  automatisch={automatischeConclusie}
+                  onWijzig={(conclusie) => setVeld((v) => ({ ...v, conclusie }))}
+                />
+              </>
+            ),
           }}
         />
         <main className="kaart-container">

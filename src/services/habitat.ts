@@ -19,6 +19,7 @@ import type {
   Polygon,
 } from 'geojson'
 import { HABITAT_BRONNEN } from '../config/bronnen'
+import type { ProfielId } from '../utils/profielen'
 import { bufferGebied } from '../utils/geometrie'
 import { fetchMetHerhaling } from '../utils/fetchMetHerhaling'
 
@@ -34,6 +35,7 @@ export interface Pand {
 /** Een aanwijzing dat een soortgroep in het gebied kan voorkomen. */
 export interface Potentie {
   soortgroep: string
+  profiel: ProfielId
   niveau: 'hoog' | 'mogelijk'
   reden: string
 }
@@ -204,16 +206,19 @@ export function bepaalPotentie(
         : `${panden.length} gebouw(en), allemaal van na 1991; minder kans op invliegopeningen, maar controleer daken en gevels.`
     potentie.push({
       soortgroep: 'Vleermuizen (gebouwbewonend)',
+      profiel: 'vleermuizen-gebouw',
       niveau: oud > 0 ? 'hoog' : 'mogelijk',
       reden,
     })
     potentie.push({
       soortgroep: 'Huismus en gierzwaluw (jaarrond beschermde nesten)',
+      profiel: 'jaarrond-nesten',
       niveau: oud > 0 ? 'hoog' : 'mogelijk',
       reden: 'Nestplaatsen onder dakpannen, in gevels en nestkasten.',
     })
     potentie.push({
       soortgroep: 'Steenmarter',
+      profiel: 'zoogdieren',
       niveau: 'mogelijk',
       reden: 'Gebruikt zolders, schuren en kruipruimtes als verblijfplaats.',
     })
@@ -227,16 +232,19 @@ export function bepaalPotentie(
       .join(', ')
     potentie.push({
       soortgroep: 'Vleermuizen (boombewonend)',
+      profiel: 'vleermuizen-boom',
       niveau: bos > 2000 ? 'hoog' : 'mogelijk',
       reden: `${reden}; holtes, spleten en loszittende schors.`,
     })
     potentie.push({
       soortgroep: 'Roofvogels en uilen (horsten, jaarrond beschermd)',
+      profiel: 'jaarrond-nesten',
       niveau: bos > 5000 ? 'hoog' : 'mogelijk',
       reden: 'Horsten van buizerd, havik, ransuil in (oudere) bomen.',
     })
     potentie.push({
       soortgroep: 'Eekhoorn',
+      profiel: 'zoogdieren',
       niveau: 'mogelijk',
       reden: 'Kobels in bomen, vooral bij naald- en gemengd bos.',
     })
@@ -245,6 +253,7 @@ export function bepaalPotentie(
     const inGebied = water.vlakkenInGebied > 0 || water.slotenMeterInGebied > 0
     potentie.push({
       soortgroep: 'Amfibieën',
+      profiel: 'amfibieen',
       niveau: inGebied ? 'hoog' : 'mogelijk',
       reden: inGebied
         ? `Water in het gebied${water.slotenMeterInGebied ? ` (o.a. ${water.slotenMeterInGebied} m sloot/waterloop)` : ''}.`
@@ -252,11 +261,13 @@ export function bepaalPotentie(
     })
     potentie.push({
       soortgroep: 'Vissen (bijv. grote modderkruiper, bittervoorn)',
+      profiel: 'vissen',
       niveau: 'mogelijk',
       reden: 'Sloten en poelen; let op bij dempen of baggeren.',
     })
     potentie.push({
       soortgroep: 'Vleermuizen (vliegroute/foerageergebied)',
+      profiel: 'vleermuizen-boom',
       niveau: 'mogelijk',
       reden: 'Watergangen en oevers worden vaak als vliegroute gebruikt.',
     })
@@ -264,11 +275,13 @@ export function bepaalPotentie(
   if (open > 0) {
     potentie.push({
       soortgroep: 'Broedvogels van open terrein (weide-/akkervogels)',
+      profiel: 'broedvogels',
       niveau: open > 10000 ? 'hoog' : 'mogelijk',
       reden: `${Math.round(open).toLocaleString('nl-NL')} m² grasland/akker.`,
     })
     potentie.push({
       soortgroep: 'Grondgebonden zoogdieren (bijv. das, foerageergebied)',
+      profiel: 'zoogdieren',
       niveau: 'mogelijk',
       reden: 'Open terrein grenzend aan bos of houtwallen.',
     })
@@ -276,11 +289,13 @@ export function bepaalPotentie(
   if (heideZand > 0) {
     potentie.push({
       soortgroep: 'Reptielen (zandhagedis, levendbarende hagedis)',
+      profiel: 'reptielen',
       niveau: 'hoog',
       reden: `${Math.round(heideZand).toLocaleString('nl-NL')} m² heide/zand/braak.`,
     })
     potentie.push({
       soortgroep: 'Rugstreeppad (pioniersituaties)',
+      profiel: 'amfibieen',
       niveau: 'mogelijk',
       reden: 'Kale, zandige terreinen met tijdelijke plassen.',
     })
@@ -288,6 +303,7 @@ export function bepaalPotentie(
   if (panden.length > 0 || bomen > 0 || bos > 0 || open > 0) {
     potentie.push({
       soortgroep: 'Broedvogels (algemeen)',
+      profiel: 'broedvogels',
       niveau: 'mogelijk',
       reden: 'Vrijwel elk terrein met begroeiing of gebouwen kan broedvogels herbergen.',
     })
