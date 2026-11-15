@@ -36,6 +36,18 @@ Andere commando's:
 | `npm run preview` | Bekijk de productieversie lokaal |
 | `npm run lint` | Controleert de code op veelgemaakte fouten |
 
+## Online bekijken (GitHub Pages)
+
+De app wordt bij elke push automatisch gebouwd en gepubliceerd via
+`.github/workflows/pages.yml`. Adres: <https://brendbleeker.github.io/1/>
+
+Eenmalig instellen in GitHub:
+
+1. **Settings → Pages → Build and deployment → Source:** kies **GitHub Actions**.
+2. **Settings → Environments → github-pages → Deployment branches:** voeg de branch
+   `claude/quickscan-kaart-webapp-pbphec` toe (standaard mag alleen `main` publiceren).
+3. Start de publicatie opnieuw via **Actions → Publiceren op GitHub Pages → Run workflow**.
+
 ## Gebruik
 
 1. Zoom in op het plangebied.
