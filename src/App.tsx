@@ -80,6 +80,9 @@ export default function App() {
       .catch((e: unknown) => setUnielijstFout(e instanceof Error ? e.message : 'onbekende fout'))
   }, [])
 
+  /** Op de telefoon staat de kaart boven het paneel: scroll ernaartoe. */
+  const naarKaart = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+
   const bijGebiedGewijzigd = useCallback((nieuw: Feature<Polygon> | null, bron: GebiedBron) => {
     setGebied(nieuw)
     setGeselecteerdeSoort(null)
@@ -244,12 +247,16 @@ export default function App() {
           onZoekGevonden={(lat, lng, zoom) => {
             setVliegNaar((v) => ({ lat, lng, zoom, versie: (v?.versie ?? 0) + 1 }))
             setKaartIngeklapt(false)
+            naarKaart()
           }}
           perceelModus={perceelModus}
           onPerceelModus={(aan) => {
             setPerceelModus(aan)
             setPerceelMelding(null)
-            if (aan) setKaartIngeklapt(false)
+            if (aan) {
+              setKaartIngeklapt(false)
+              naarKaart()
+            }
           }}
           perceelMelding={perceelMelding}
           onGeimporteerd={plaatsGebied}
