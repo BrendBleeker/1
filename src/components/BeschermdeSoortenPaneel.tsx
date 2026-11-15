@@ -44,7 +44,12 @@ export default function BeschermdeSoortenPaneel({ soorten }: Props) {
         Gekleurde maanden: periode waarin onderzoek naar de soort geschikt is (indicatief). Ga
         met de muis op een rij staan voor een toelichting; het rapport bevat alle toelichtingen.
       </p>
-      <Soortenkalender beschermdeSoorten={beschermd} toonBroedvogels={vogelsGezien} compact />
+      <Soortenkalender
+        beschermdeSoorten={beschermd}
+        toonBroedvogels={vogelsGezien}
+        compact
+        metToelichting={false}
+      />
     </section>
   )
 }

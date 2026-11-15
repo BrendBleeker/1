@@ -14,7 +14,7 @@ Teken een gebied op de kaart en zie welke beschermde natuurgebieden en soorten e
 | 2 | Lagenmenu (luchtfoto, Natura 2000, NNN) en melding binnen 1 km van Natura 2000 | ✅ |
 | 3 | GBIF-waarnemingen in gebied + buffer, soortenlijst per soortgroep | ✅ |
 | 4 | Lijst beschermde soorten en soortenkalender | ✅ |
-| 5 | Printbaar conceptrapport | ⏳ |
+| 5 | Printbaar conceptrapport | ✅ |
 
 ## De app starten
 
@@ -60,7 +60,10 @@ In **Settings → Pages** staat de bron op *Deploy from a branch → gh-pages*.
 7. Onder **Beschermde soorten** staan de gevonden soorten van de (indicatieve) startlijst,
    met een **soortenkalender**: de maanden waarin onderzoek naar die soorten geschikt is.
    Beschermde soorten zijn rood op de kaart en staan bovenaan de soortenlijst.
-8. Via het **lagenmenu** rechtsboven kies je kaart of luchtfoto en zet je Natura 2000 en het
+8. Klik op **Conceptrapport maken** (bovenaan het zijpaneel, zodra alle gegevens geladen
+   zijn). Vul eventueel een projectnaam in en kies **Afdrukken / opslaan als PDF**.
+   Op een telefoon: Delen → Afdrukken → (knijp-zoom op de preview) → Opslaan als PDF.
+9. Via het **lagenmenu** rechtsboven kies je kaart of luchtfoto en zet je Natura 2000 en het
    Natuurnetwerk Nederland aan of uit.
 
 ## Projectstructuur
@@ -97,7 +100,9 @@ src/
     ├── Soortenlijst.tsx         soortenlijst, groeperen en filteren
     ├── WaarnemingenLaag.tsx     waarnemingen als punten op de kaart
     ├── BeschermdeSoortenPaneel.tsx  gevonden beschermde soorten
-    └── Soortenkalender.tsx      tabel met onderzoeksmaanden
+    ├── Soortenkalender.tsx      tabel met onderzoeksmaanden
+    ├── Rapport.tsx              printbaar conceptrapport
+    └── StatischeKaart.tsx       kaartafbeelding voor het rapport (PDOK-tegels + SVG)
 ```
 
 ## Techniek
@@ -148,8 +153,24 @@ Een soort toevoegen: voeg een blok toe aan `soorten` met de wetenschappelijke na
 die gebruikt (controleer via <https://www.gbif.org/species/search>), eventuele `synoniemen`,
 `nederlandseNaam`, `regime`, `onderzoeksmaanden` (1 = januari … 12 = december) en `toelichting`.
 
+## Het conceptrapport
+
+Het rapport is een gewone webpagina met print-opmaak (CSS `@media print`); de browser maakt
+er een PDF van. Inhoud: kaartafbeelding, oppervlakte en middelpunt, Natura 2000 binnen 1 km,
+opmerking over NNN, overzicht waargenomen soorten per groep, beschermde soorten (indicatief),
+soortenkalender, bronnen met datum en tijd van ophalen, disclaimer en een bijlage met alle
+waargenomen soorten.
+
+De kaartafbeelding wordt opgebouwd uit dezelfde PDOK-kaarttegels als de app (er bestaat geen
+WMS-versie van de BRT-Achtergrondkaart), met de Natura 2000-WMS en een SVG-laag erover.
+
 ## Mogelijke uitbreidingen
 
 - **Waarneming.nl** en de **Nationale Databank Flora en Fauna (NDFF)** bevatten veel meer
   Nederlandse waarnemingen dan GBIF, maar vereisen een account of betaald abonnement.
   Daarom worden ze nu niet gebruikt.
+- **Natuurnetwerk Nederland** automatisch controleren, bijvoorbeeld met de landelijke dataset
+  van BIJ12 (als die als WFS/OGC API beschikbaar komt) of de provinciale diensten.
+- **Rijksdriehoekscoördinaten (RD)** in het rapport (met bijv. proj4js).
+- De **lijst beschermde soorten** uitbreiden en laten controleren door een ecoloog.
+- **Projecten opslaan** (gebied als GeoJSON downloaden en later weer inladen).

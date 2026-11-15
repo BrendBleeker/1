@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import type { Feature, Polygon } from 'geojson'
 import Kaart from './components/Kaart'
 import Zijpaneel from './components/Zijpaneel'
+import Rapport from './components/Rapport'
 import { useNatura2000 } from './hooks/useNatura2000'
 import { useWaarnemingen } from './hooks/useWaarnemingen'
 import { STANDAARD_WAARNEMING_BUFFER_M } from './config/bronnen'
@@ -15,6 +16,8 @@ export default function App() {
   const [bufferM, setBufferM] = useState(STANDAARD_WAARNEMING_BUFFER_M)
   // Soort die in de lijst is aangeklikt (alleen die staat dan op de kaart)
   const [geselecteerdeSoort, setGeselecteerdeSoort] = useState<number | null>(null)
+  // Of de rapportpagina openstaat
+  const [toonRapport, setToonRapport] = useState(false)
 
   // useCallback zorgt dat de kaart deze functie niet steeds opnieuw krijgt
   const bijGebiedGewijzigd = useCallback((nieuw: Feature<Polygon> | null) => {
@@ -43,31 +46,49 @@ export default function App() {
   const soortenPerKey = useMemo(() => new Map(soorten.map((s) => [s.key, s])), [soorten])
 
   return (
-    <div className="app">
-      <Zijpaneel
-        gebied={gebied}
-        natura2000={natura2000.status}
-        onNatura2000Opnieuw={natura2000.opnieuw}
-        waarnemingen={waarnemingen.status}
-        soorten={soorten}
-        bufferM={bufferM}
-        onBufferWijzig={setBufferM}
-        onWaarnemingenOpnieuw={waarnemingen.opnieuw}
-        geselecteerdeSoort={geselecteerdeSoort}
-        onSelecteerSoort={setGeselecteerdeSoort}
-      />
-      <main className="kaart-container">
-        <Kaart
+    <>
+      <div className="app">
+        <Zijpaneel
           gebied={gebied}
-          onGebiedGewijzigd={bijGebiedGewijzigd}
-          zoekgebied={bufferM > 0 ? waarnemingen.zoekgebied : null}
-          waarnemingen={
-            waarnemingen.status.soort === 'klaar' ? waarnemingen.status.resultaat.waarnemingen : []
-          }
-          soorten={soortenPerKey}
+          natura2000={natura2000.status}
+          onNatura2000Opnieuw={natura2000.opnieuw}
+          waarnemingen={waarnemingen.status}
+          soorten={soorten}
+          bufferM={bufferM}
+          onBufferWijzig={setBufferM}
+          onWaarnemingenOpnieuw={waarnemingen.opnieuw}
           geselecteerdeSoort={geselecteerdeSoort}
+          onSelecteerSoort={setGeselecteerdeSoort}
+          onRapport={() => setToonRapport(true)}
         />
-      </main>
-    </div>
+        <main className="kaart-container">
+          <Kaart
+            gebied={gebied}
+            onGebiedGewijzigd={bijGebiedGewijzigd}
+            zoekgebied={bufferM > 0 ? waarnemingen.zoekgebied : null}
+            waarnemingen={
+              waarnemingen.status.soort === 'klaar'
+                ? waarnemingen.status.resultaat.waarnemingen
+                : []
+            }
+            soorten={soortenPerKey}
+            geselecteerdeSoort={geselecteerdeSoort}
+          />
+        </main>
+      </div>
+
+      {/* Het rapport ligt als laag over de app, zodat de kaart (met tekening) blijft bestaan */}
+      {toonRapport && gebied && (
+        <Rapport
+          gebied={gebied}
+          bufferM={bufferM}
+          zoekgebied={bufferM > 0 ? waarnemingen.zoekgebied : null}
+          natura2000={natura2000.status}
+          waarnemingen={waarnemingen.status}
+          soorten={soorten}
+          onSluiten={() => setToonRapport(false)}
+        />
+      )}
+    </>
   )
 }

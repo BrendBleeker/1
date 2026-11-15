@@ -7,12 +7,19 @@ interface Props {
   beschermdeSoorten: Soort[]
   /** true als er vogels zijn waargenomen (dan tonen we ook de algemene broedvogelregel) */
   toonBroedvogels: boolean
-  /** Smalle weergave (zijpaneel): maanden als één letter, zonder toelichting eronder */
+  /** Smalle weergave: maanden als één letter */
   compact?: boolean
+  /** Toelichting per soort onder de tabel tonen (standaard: ja) */
+  metToelichting?: boolean
 }
 
 /** Tabel met per beschermde soort de maanden waarin onderzoek geschikt is. */
-export default function Soortenkalender({ beschermdeSoorten, toonBroedvogels, compact }: Props) {
+export default function Soortenkalender({
+  beschermdeSoorten,
+  toonBroedvogels,
+  compact,
+  metToelichting = true,
+}: Props) {
   const rijen = beschermdeSoorten
     .filter((s) => s.bescherming)
     .map((s) => ({
@@ -70,7 +77,7 @@ export default function Soortenkalender({ beschermdeSoorten, toonBroedvogels, co
           ))}
         </tbody>
       </table>
-      <ul className="kalender-toelichting" hidden={compact}>
+      <ul className="kalender-toelichting" hidden={!metToelichting}>
         {rijen.map((r) => (
           <li key={r.key}>
             <strong>{r.naam}</strong>

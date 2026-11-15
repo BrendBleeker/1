@@ -18,6 +18,7 @@ interface Props {
   onWaarnemingenOpnieuw: () => void
   geselecteerdeSoort: number | null
   onSelecteerSoort: (key: number | null) => void
+  onRapport: () => void
 }
 
 /** Paneel naast de kaart met informatie over het getekende gebied. */
@@ -59,6 +60,7 @@ export default function Zijpaneel(props: Props) {
               <dd>{gebied.geometry.coordinates[0].length - 1}</dd>
             </dl>
           </section>
+          <RapportKnop {...props} />
           <Natura2000Melding status={natura2000} onOpnieuw={onNatura2000Opnieuw} />
           {props.waarnemingen.soort === 'klaar' && props.waarnemingen.resultaat.totaal > 0 && (
             <BeschermdeSoortenPaneel soorten={props.soorten} />
@@ -103,5 +105,18 @@ export default function Zijpaneel(props: Props) {
         </ul>
       </section>
     </aside>
+  )
+}
+
+/** Knop om het conceptrapport te openen; wacht tot alle gegevens binnen zijn. */
+function RapportKnop({ natura2000, waarnemingen, onRapport }: Props) {
+  const bezig = natura2000.soort === 'laden' || waarnemingen.soort === 'laden'
+  return (
+    <div className="rapport-knop-blok">
+      <button type="button" className="knop-primair" disabled={bezig} onClick={onRapport}>
+        📄 Conceptrapport maken
+      </button>
+      {bezig && <small> wacht tot alle gegevens geladen zijn…</small>}
+    </div>
   )
 }
