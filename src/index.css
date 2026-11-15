@@ -643,3 +643,120 @@ progress {
 .rapport {
   overflow-wrap: anywhere; /* lange URL's afbreken op smalle schermen */
 }
+
+/* ---------- Zoeken, gebied-gereedschap, tabbladen ---------- */
+.zoekbalk {
+  position: relative;
+  margin: 0.75rem 0 0.5rem;
+}
+.zoekbalk input {
+  width: 100%;
+  font: inherit;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  background: white;
+}
+.zoek-suggesties {
+  position: absolute;
+  z-index: 1100;
+  left: 0;
+  right: 0;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  background: white;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+.zoek-suggesties button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.zoek-suggesties button:hover {
+  background: var(--paneel);
+}
+.zoek-suggesties small {
+  color: var(--tekst-zacht);
+}
+.knoppenrij {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+}
+.knop {
+  font: inherit;
+  font-size: 0.9em;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+}
+.knop:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.knop:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.knop.actief {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.breek {
+  overflow-wrap: anywhere;
+}
+.projectnaam-veld {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--tekst-zacht);
+  font-size: 0.9em;
+}
+.projectnaam-veld input {
+  display: block;
+  width: 100%;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--tekst);
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  margin-top: 0.15rem;
+}
+.tabbladen {
+  display: flex;
+  gap: 0.2rem;
+  margin: 0.75rem 0 0;
+  border-bottom: 2px solid var(--rand);
+  position: sticky;
+  top: -1.25rem;
+  background: var(--paneel);
+  z-index: 5;
+  padding-top: 0.25rem;
+}
+.tab {
+  flex: 1;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.45rem 0.2rem;
+  border: none;
+  background: none;
+  color: var(--tekst-zacht);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+}
+.tab.actief {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}

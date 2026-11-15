@@ -29,3 +29,12 @@ export function formatAfstand(meters: number): string {
   if (meters < 1000) return `${Math.round(meters / 10) * 10} m`
   return `${formatGetal(meters / 1000, 1)} km`
 }
+
+/** Oppervlakte leesbaar: kleine gebieden in m², grotere in hectare. */
+export function formatOppervlakte(gebied: Feature<Polygon>): string {
+  const ha = oppervlakteHectare(gebied)
+  const m2 = `${Math.round(ha * 10_000).toLocaleString('nl-NL')} m²`
+  if (ha < 0.01) return m2
+  if (ha < 1) return `${m2} (${formatGetal(ha, 2)} ha)`
+  return `${formatGetal(ha)} ha`
+}

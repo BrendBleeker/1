@@ -86,3 +86,33 @@ export const GBIF = {
 /** Keuzes voor de zoekbuffer rond het gebied bij het zoeken naar waarnemingen (meters). */
 export const WAARNEMING_BUFFERS_M = [0, 100, 250, 500, 1000]
 export const STANDAARD_WAARNEMING_BUFFER_M = 250
+
+/**
+ * Historische luchtfoto's (PDOK Luchtfoto RGB, zelfde WMTS als LUCHTFOTO, andere laag).
+ * Laagnamen gecontroleerd in de GetCapabilities; alle jaargangen werken tot zoom 21.
+ */
+export const LUCHTFOTO_JAARGANGEN = [
+  { jaar: 2024, laag: '2024_orthoHR' },
+  { jaar: 2022, laag: '2022_orthoHR' },
+  { jaar: 2020, laag: '2020_ortho25' },
+  { jaar: 2018, laag: '2018_ortho25' },
+  { jaar: 2016, laag: '2016_ortho25' },
+].map((j) => ({
+  ...j,
+  url: `https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/${j.laag}/EPSG:3857/{z}/{x}/{y}.jpeg`,
+}))
+
+/**
+ * PDOK Locatieserver: zoeken op adres, straat, postcode, plaats (CORS toegestaan).
+ * https://api.pdok.nl/bzk/locatieserver/search/v3_1/ui/
+ */
+export const LOCATIESERVER = {
+  suggestUrl: 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest',
+  lookupUrl: 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/lookup',
+}
+
+/** Kadastrale kaart (BRK) als OGC API: percelen. */
+export const KADASTER_PERCELEN = {
+  naam: 'Kadastrale kaart (BRK, Kadaster via PDOK)',
+  itemsUrl: 'https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items',
+}

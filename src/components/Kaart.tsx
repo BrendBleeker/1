@@ -9,13 +9,15 @@ import {
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { Feature, MultiPolygon, Polygon } from 'geojson'
-import TekenGereedschap from './TekenGereedschap'
+import TekenGereedschap, { type ExternGebied, type GebiedBron } from './TekenGereedschap'
+import KaartActies, { type VliegNaar } from './KaartActies'
 import WaarnemingenLaag from './WaarnemingenLaag'
 import KaartGrootteBijwerken from './KaartGrootteBijwerken'
 import type { Soort, Waarneming } from '../types'
 import {
   BRT_ACHTERGRONDKAART,
   LUCHTFOTO,
+  LUCHTFOTO_JAARGANGEN,
   NATURA2000,
   NATUURNETWERK,
   NATURA2000_ZOEKAFSTAND_M,
@@ -26,7 +28,7 @@ import { bufferGebied } from '../utils/geometrie'
 
 interface Props {
   gebied: Feature<Polygon> | null
-  onGebiedGewijzigd: (gebied: Feature<Polygon> | null) => void
+  onGebiedGewijzigd: (gebied: Feature<Polygon> | null, bron: GebiedBron) => void
   /** Gebied + buffer waarin naar waarnemingen gezocht wordt (null = geen buffer) */
   zoekgebied: Feature<Polygon | MultiPolygon> | null
   waarnemingen: Waarneming[]
@@ -34,6 +36,10 @@ interface Props {
   geselecteerdeSoort: number | null
   /** Verandert als de kaart van grootte verandert (mobiel in-/uitklappen) */
   grootteSleutel: string
+  /** Gebied dat van buitenaf op de kaart gezet wordt (perceel, bestand, link, project) */
+  extern: ExternGebied | null
+  vliegNaar: VliegNaar | null
+  onKaartKlik: ((lat: number, lng: number) => void) | null
 }
 
 /** De kaart van Nederland met lagenmenu en tekengereedschap. */
@@ -45,6 +51,9 @@ export default function Kaart({
   soorten,
   geselecteerdeSoort,
   grootteSleutel,
+  extern,
+  vliegNaar,
+  onKaartKlik,
 }: Props) {
   // De 1 km-zone rond het getekende gebied (alleen ter informatie op de kaart)
   const zone = useMemo(
@@ -75,13 +84,19 @@ export default function Kaart({
             maxZoom={LUCHTFOTO.maxZoom}
           />
         </LayersControl.BaseLayer>
-        <LayersControl.BaseLayer name="Luchtfoto">
+        <LayersControl.BaseLayer name="Luchtfoto (actueel)">
           <TileLayer
             url={LUCHTFOTO.url}
             attribution={LUCHTFOTO.attributie}
             maxZoom={LUCHTFOTO.maxZoom}
           />
         </LayersControl.BaseLayer>
+        {/* Historische luchtfoto's: handig om te zien wat er recent veranderd is */}
+        {LUCHTFOTO_JAARGANGEN.map((j) => (
+          <LayersControl.BaseLayer key={j.jaar} name={`Luchtfoto ${j.jaar}`}>
+            <TileLayer url={j.url} attribution={LUCHTFOTO.attributie} maxZoom={LUCHTFOTO.maxZoom} />
+          </LayersControl.BaseLayer>
+        ))}
 
         {/* Extra lagen: los aan en uit te zetten */}
         <LayersControl.Overlay checked name="Natura 2000">
@@ -136,7 +151,8 @@ export default function Kaart({
       />
 
       <ScaleControl imperial={false} position="bottomright" />
-      <TekenGereedschap onGebiedGewijzigd={onGebiedGewijzigd} />
+      <TekenGereedschap onGebiedGewijzigd={onGebiedGewijzigd} extern={extern} />
+      <KaartActies vliegNaar={vliegNaar} onKlik={onKaartKlik} />
       <KaartGrootteBijwerken sleutel={grootteSleutel} />
     </MapContainer>
   )

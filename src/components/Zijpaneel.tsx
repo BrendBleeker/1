@@ -1,14 +1,23 @@
+import { useState, type ReactNode } from 'react'
 import type { Feature, Polygon } from 'geojson'
-import { oppervlakteHectare, formatGetal } from '../utils/geometrie'
+import { formatOppervlakte } from '../utils/geometrie'
 import type { Natura2000Status } from '../hooks/useNatura2000'
+import type { WaarnemingenStatus } from '../hooks/useWaarnemingen'
+import type { Soort } from '../types'
 import Natura2000Melding from './Natura2000Melding'
 import WaarnemingenPaneel from './WaarnemingenPaneel'
 import BeschermdeSoortenPaneel from './BeschermdeSoortenPaneel'
-import type { WaarnemingenStatus } from '../hooks/useWaarnemingen'
-import type { Soort } from '../types'
+import ZoekBalk from './ZoekBalk'
+import GebiedGereedschap from './GebiedGereedschap'
+import Legenda from './Legenda'
 
-interface Props {
+export type Tabblad = 'overzicht' | 'soorten' | 'planning' | 'veld'
+
+export interface ZijpaneelProps {
   gebied: Feature<Polygon> | null
+  herkomst: string | null
+  projectnaam: string
+  onProjectnaam: (naam: string) => void
   natura2000: Natura2000Status
   onNatura2000Opnieuw: () => void
   waarnemingen: WaarnemingenStatus
@@ -19,97 +28,145 @@ interface Props {
   geselecteerdeSoort: number | null
   onSelecteerSoort: (key: number | null) => void
   onRapport: () => void
+  onZoekGevonden: (lat: number, lng: number, zoom: number) => void
+  perceelModus: boolean
+  onPerceelModus: (aan: boolean) => void
+  perceelMelding: string | null
+  onGeimporteerd: (gebied: Feature<Polygon>, herkomst: string) => void
+  /** Extra inhoud per tabblad (wordt in latere onderdelen ingevuld) */
+  extra?: Partial<Record<Tabblad, ReactNode>>
+  /** Inhoud boven de tabbladen (bijv. projecten) */
+  boven?: ReactNode
 }
 
-/** Paneel naast de kaart met informatie over het getekende gebied. */
-export default function Zijpaneel(props: Props) {
-  const { gebied, natura2000, onNatura2000Opnieuw } = props
+const TABBLADEN: { id: Tabblad; label: string }[] = [
+  { id: 'overzicht', label: 'Overzicht' },
+  { id: 'soorten', label: 'Soorten' },
+  { id: 'planning', label: 'Planning' },
+  { id: 'veld', label: 'Veld' },
+]
+
+/** Paneel naast de kaart, met tabbladen zodra er een gebied is. */
+export default function Zijpaneel(props: ZijpaneelProps) {
+  const { gebied } = props
+  const [tab, setTab] = useState<Tabblad>('overzicht')
+
+  const gereedschap = (
+    <GebiedGereedschap
+      gebied={gebied}
+      projectnaam={props.projectnaam}
+      bufferM={props.bufferM}
+      soorten={props.soorten}
+      perceelModus={props.perceelModus}
+      onPerceelModus={props.onPerceelModus}
+      perceelMelding={props.perceelMelding}
+      onGeimporteerd={props.onGeimporteerd}
+    />
+  )
+
   return (
     <aside className="zijpaneel">
       <h1>Quickscan Kaart</h1>
       <p className="ondertitel">Voorbereiding quickscan flora en fauna</p>
+      <ZoekBalk onGevonden={props.onZoekGevonden} />
+      {props.boven}
 
       {!gebied ? (
-        <section className="uitleg">
-          <h2>Begin hier</h2>
-          <ol>
-            <li>Zoom in op je plangebied.</li>
-            <li>
-              Klik op de kaart links op <strong>Rechthoek tekenen</strong> of{' '}
-              <strong>Polygoon tekenen</strong> (de naam verschijnt als je met de muis op een knop
-              staat).
-            </li>
-            <li>Klik de hoekpunten aan en sluit af door op het eerste punt te klikken.</li>
-          </ol>
-          <p>Met de andere knoppen kun je het gebied bewerken, verslepen of verwijderen.</p>
-          <p>
-            Rechtsboven op de kaart zit het <strong>lagenmenu</strong>: kies tussen kaart en
-            luchtfoto, en zet Natura 2000 of het Natuurnetwerk Nederland aan of uit.
-          </p>
-        </section>
+        <>
+          <section className="uitleg">
+            <h2>Begin hier</h2>
+            <ol>
+              <li>Zoek een adres of plaats, of zoom in op de kaart.</li>
+              <li>
+                Bepaal het plangebied: <strong>teken</strong> het met de knoppen links op de kaart
+                (rechthoek of polygoon), <strong>kies een kadastraal perceel</strong> of{' '}
+                <strong>laad een bestand</strong> (GeoJSON of KML).
+              </li>
+              <li>De app zoekt daarna automatisch natuurgebieden, soorten en habitat op.</li>
+            </ol>
+          </section>
+          {gereedschap}
+          <Legenda />
+        </>
       ) : (
         <>
-          <section>
-            <h2>Onderzoeksgebied</h2>
-            <dl className="kerngegevens">
-              <dt>Oppervlakte</dt>
-              <dd>
-                <strong>{formatGetal(oppervlakteHectare(gebied))} ha</strong>
-              </dd>
-              <dt>Aantal hoekpunten</dt>
-              <dd>{gebied.geometry.coordinates[0].length - 1}</dd>
-            </dl>
-          </section>
-          <RapportKnop {...props} />
-          <Natura2000Melding status={natura2000} onOpnieuw={onNatura2000Opnieuw} />
-          {props.waarnemingen.soort === 'klaar' && props.waarnemingen.resultaat.totaal > 0 && (
-            <BeschermdeSoortenPaneel soorten={props.soorten} />
+          <nav className="tabbladen" role="tablist">
+            {TABBLADEN.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.id}
+                className={tab === t.id ? 'tab actief' : 'tab'}
+                onClick={() => setTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+
+          {tab === 'overzicht' && (
+            <>
+              <section>
+                <h2>Onderzoeksgebied</h2>
+                <label className="projectnaam-veld">
+                  Projectnaam
+                  <input
+                    value={props.projectnaam}
+                    onChange={(e) => props.onProjectnaam(e.target.value)}
+                    placeholder="bijv. Nieuwbouw Dorpsstraat 12"
+                  />
+                </label>
+                <dl className="kerngegevens">
+                  <dt>Oppervlakte</dt>
+                  <dd>
+                    <strong>{formatOppervlakte(gebied)}</strong>
+                  </dd>
+                  {props.herkomst && (
+                    <>
+                      <dt>Herkomst</dt>
+                      <dd>{props.herkomst}</dd>
+                    </>
+                  )}
+                </dl>
+                {gereedschap}
+              </section>
+              <RapportKnop {...props} />
+              <Natura2000Melding status={props.natura2000} onOpnieuw={props.onNatura2000Opnieuw} />
+              {props.extra?.overzicht}
+              <Legenda />
+            </>
           )}
-          <WaarnemingenPaneel
-            status={props.waarnemingen}
-            soorten={props.soorten}
-            bufferM={props.bufferM}
-            onBufferWijzig={props.onBufferWijzig}
-            onOpnieuw={props.onWaarnemingenOpnieuw}
-            geselecteerdeSoort={props.geselecteerdeSoort}
-            onSelecteerSoort={props.onSelecteerSoort}
-          />
+
+          {tab === 'soorten' && (
+            <>
+              {props.waarnemingen.soort === 'klaar' && props.waarnemingen.resultaat.totaal > 0 && (
+                <BeschermdeSoortenPaneel soorten={props.soorten} />
+              )}
+              {props.extra?.soorten}
+              <WaarnemingenPaneel
+                status={props.waarnemingen}
+                soorten={props.soorten}
+                bufferM={props.bufferM}
+                onBufferWijzig={props.onBufferWijzig}
+                onOpnieuw={props.onWaarnemingenOpnieuw}
+                geselecteerdeSoort={props.geselecteerdeSoort}
+                onSelecteerSoort={props.onSelecteerSoort}
+              />
+            </>
+          )}
+
+          {tab === 'planning' &&
+            (props.extra?.planning ?? <p className="voetnoot">Nog niet beschikbaar.</p>)}
+          {tab === 'veld' && (props.extra?.veld ?? <p className="voetnoot">Nog niet beschikbaar.</p>)}
         </>
       )}
-
-      <section>
-        <h2>Legenda</h2>
-        <ul className="legenda">
-          <li>
-            <span className="legenda-vak legenda-gebied" /> Onderzoeksgebied
-          </li>
-          <li>
-            <span className="legenda-vak legenda-zone" /> Zone van 1 km
-          </li>
-          <li>
-            <span className="legenda-vak legenda-zoek" /> Zoekgebied waarnemingen
-          </li>
-          <li>
-            <span className="legenda-vak legenda-n2k" /> Natura 2000
-          </li>
-          <li>
-            <span className="legenda-vak legenda-nnn" /> Natuurnetwerk Nederland (NNN)
-          </li>
-          <li>
-            <span className="legenda-stip" style={{ background: '#c0392b' }} /> Beschermde soort
-          </li>
-          <li>
-            <span className="legenda-stip" style={{ background: '#2f80c1' }} /> Overige waarneming
-            (kleur per soortgroep)
-          </li>
-        </ul>
-      </section>
     </aside>
   )
 }
 
 /** Knop om het conceptrapport te openen; wacht tot alle gegevens binnen zijn. */
-function RapportKnop({ natura2000, waarnemingen, onRapport }: Props) {
+function RapportKnop({ natura2000, waarnemingen, onRapport }: ZijpaneelProps) {
   const bezig = natura2000.soort === 'laden' || waarnemingen.soort === 'laden'
   return (
     <div className="rapport-knop-blok">

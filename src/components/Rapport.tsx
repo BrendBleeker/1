@@ -13,13 +13,16 @@ import {
   NATURA2000_ZOEKAFSTAND_M,
   NATUURNETWERK,
 } from '../config/bronnen'
-import { bufferGebied, formatAfstand, formatGetal, oppervlakteHectare } from '../utils/geometrie'
+import { bufferGebied, formatAfstand, formatGetal, formatOppervlakte } from '../utils/geometrie'
 import { formatDatum, formatTijdstip } from '../utils/datum'
 import { GROEP_VOLGORDE, SOORTGROEPEN } from '../utils/soortgroepen'
 import { LIJST_VERSIE, sorteerBeschermdEerst } from '../utils/bescherming'
 
 interface Props {
   gebied: Feature<Polygon>
+  herkomst: string | null
+  projectnaam: string
+  onProjectnaam: (naam: string) => void
   bufferM: number
   zoekgebied: Feature<Polygon | MultiPolygon> | null
   natura2000: Natura2000Status
@@ -37,7 +40,6 @@ const BESCHERMING_UITLEG: Record<string, string> = {
 /** Printbaar conceptrapport (afdrukken of opslaan als PDF via de browser). */
 export default function Rapport(props: Props) {
   const { gebied, bufferM, zoekgebied, natura2000, waarnemingen, soorten } = props
-  const [projectnaam, setProjectnaam] = useState('')
   const [gemaaktOp] = useState(() => new Date()) // tijdstip waarop het rapport is geopend
   // Kaartafbeelding passend maken op smalle schermen (telefoon)
   const [kaartBreedte] = useState(() => Math.min(720, window.innerWidth - 40))
@@ -71,8 +73,8 @@ export default function Rapport(props: Props) {
           <label className="projectnaam">
             <span className="alleen-scherm">Projectnaam / locatie (optioneel): </span>
             <input
-              value={projectnaam}
-              onChange={(e) => setProjectnaam(e.target.value)}
+              value={props.projectnaam}
+              onChange={(e) => props.onProjectnaam(e.target.value)}
               placeholder="Typ hier een projectnaam of locatie"
             />
           </label>
@@ -95,7 +97,13 @@ export default function Rapport(props: Props) {
           />
           <dl className="kerngegevens">
             <dt>Oppervlakte</dt>
-            <dd>{formatGetal(oppervlakteHectare(gebied))} ha</dd>
+            <dd>{formatOppervlakte(gebied)}</dd>
+            {props.herkomst && (
+              <>
+                <dt>Begrenzing</dt>
+                <dd>{props.herkomst}</dd>
+              </>
+            )}
             <dt>Middelpunt (WGS84)</dt>
             <dd>
               {formatGetal(lat, 5)}° N, {formatGetal(lng, 5)}° O

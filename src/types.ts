@@ -49,4 +49,6 @@ export interface Soort {
   laatsteDatum?: string
   /** Ingevuld als de soort op de (indicatieve) lijst van beschermde soorten staat */
   bescherming?: BeschermdeSoort
+  /** true als de soort op de EU-Unielijst van invasieve exoten staat */
+  exoot?: boolean
 }
