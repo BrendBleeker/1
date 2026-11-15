@@ -24,23 +24,42 @@ import { LEGE_VELDGEGEVENS, type VeldGegevens } from './data/veldchecklist'
 import { relevanteProfielen } from './utils/relevanteProfielen'
 import { genereerConclusie } from './utils/conclusie'
 import { formatAfstand } from './utils/geometrie'
+import ProjectenMenu from './components/ProjectenMenu'
+import {
+  bewaarProject,
+  leesActiefProject,
+  nieuwProjectId,
+  wisActiefProject,
+  type Project,
+} from './utils/projecten'
 
 // Een plangebied uit een gedeelde link (eenmalig bij het openen van de app)
 const uitLink = leesDeellink()
+// Anders: verder met het project waar je het laatst aan werkte
+const startProject = uitLink ? null : leesActiefProject()
 
 export default function App() {
   // Het onderzoeksgebied (GeoJSON), of null als er nog niets getekend is
   const [gebied, setGebied] = useState<Feature<Polygon> | null>(null)
   // Waar het gebied vandaan komt (perceel, bestand, link …), voor in het rapport
-  const [herkomst, setHerkomst] = useState<string | null>(uitLink ? 'Gedeelde link' : null)
-  const [projectnaam, setProjectnaam] = useState('')
-  // Gebied dat van buitenaf op de kaart gezet moet worden
-  const [extern, setExtern] = useState<ExternGebied | null>(
-    uitLink ? { gebied: uitLink.gebied, versie: 1 } : null,
+  const [herkomst, setHerkomst] = useState<string | null>(
+    uitLink ? 'Gedeelde link' : (startProject?.herkomst ?? null),
   )
+  const [projectnaam, setProjectnaam] = useState(startProject?.naam ?? '')
+  // Opgeslagen project waar je nu in werkt (null = nog niet opgeslagen)
+  const [actiefId, setActiefId] = useState<string | null>(startProject?.id ?? null)
+  const [opslagVersie, setOpslagVersie] = useState(0)
+  const [opslagFout, setOpslagFout] = useState<string | null>(null)
+  // Gebied dat van buitenaf op de kaart gezet moet worden
+  const [extern, setExtern] = useState<ExternGebied | null>(() => {
+    const start = uitLink?.gebied ?? startProject?.gebied
+    return start ? { gebied: start, versie: 1 } : null
+  })
   const [vliegNaar, setVliegNaar] = useState<VliegNaar | null>(null)
   // Buffer rond het gebied voor het zoeken naar waarnemingen
-  const [bufferM, setBufferM] = useState(uitLink?.bufferM ?? STANDAARD_WAARNEMING_BUFFER_M)
+  const [bufferM, setBufferM] = useState(
+    uitLink?.bufferM ?? startProject?.bufferM ?? STANDAARD_WAARNEMING_BUFFER_M,
+  )
   // Soort die in de lijst is aangeklikt (alleen die staat dan op de kaart)
   const [geselecteerdeSoort, setGeselecteerdeSoort] = useState<number | null>(null)
   const [toonRapport, setToonRapport] = useState(false)
@@ -121,7 +140,50 @@ export default function App() {
   const soortenPerKey = useMemo(() => new Map(soorten.map((s) => [s.key, s])), [soorten])
 
   // Veldbezoek: checklist, notities, foto's en conclusie
-  const [veld, setVeld] = useState<VeldGegevens>(LEGE_VELDGEGEVENS)
+  const [veld, setVeld] = useState<VeldGegevens>(startProject?.veld ?? LEGE_VELDGEGEVENS)
+
+  // Automatisch opslaan in de browser, kort nadat je iets wijzigt
+  useEffect(() => {
+    if (!gebied) return
+    const timer = setTimeout(() => {
+      const id = actiefId ?? nieuwProjectId()
+      try {
+        bewaarProject({
+          id,
+          naam: projectnaam,
+          gebied,
+          herkomst,
+          bufferM,
+          veld,
+          bijgewerkt: new Date().toISOString(),
+        })
+        setOpslagFout(null)
+        if (!actiefId) setActiefId(id)
+        setOpslagVersie((v) => v + 1)
+      } catch (e) {
+        setOpslagFout(e instanceof Error ? e.message : 'Opslaan mislukt.')
+      }
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [gebied, projectnaam, herkomst, bufferM, veld, actiefId])
+
+  const openProject = (p: Project) => {
+    setActiefId(p.id)
+    setProjectnaam(p.naam)
+    setBufferM(p.bufferM)
+    setVeld(p.veld)
+    setExtern((e) => ({ gebied: p.gebied, versie: (e?.versie ?? 0) + 1 }))
+    setHerkomst(p.herkomst)
+  }
+  const nieuwProject = () => {
+    wisActiefProject()
+    setActiefId(null)
+    setProjectnaam('')
+    setVeld(LEGE_VELDGEGEVENS)
+    setExtern((e) => ({ gebied: null, versie: (e?.versie ?? 0) + 1 }))
+    setHerkomst(null)
+    setOpslagFout(null)
+  }
 
   // Welke soortgroepen spelen hier, en waarom (soorten, habitat, veld)
   const profielen = useMemo(
@@ -191,6 +253,15 @@ export default function App() {
           }}
           perceelMelding={perceelMelding}
           onGeimporteerd={plaatsGebied}
+          boven={
+            <ProjectenMenu
+              actiefId={actiefId}
+              opslagVersie={opslagVersie}
+              opslagFout={opslagFout}
+              onOpen={openProject}
+              onNieuw={nieuwProject}
+            />
+          }
           extra={{
             overzicht: (
               <HabitatPaneel
@@ -271,6 +342,10 @@ export default function App() {
           natura2000={natura2000.status}
           waarnemingen={waarnemingen.status}
           soorten={soorten}
+          habitat={habitat.status}
+          veld={veld}
+          conclusie={veld.conclusie || automatischeConclusie}
+          profielen={profielen}
           onSluiten={() => setToonRapport(false)}
         />
       )}

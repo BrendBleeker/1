@@ -17,6 +17,11 @@ import { bufferGebied, formatAfstand, formatGetal, formatOppervlakte } from '../
 import { formatDatum, formatTijdstip } from '../utils/datum'
 import { GROEP_VOLGORDE, SOORTGROEPEN } from '../utils/soortgroepen'
 import { LIJST_VERSIE, sorteerBeschermdEerst } from '../utils/bescherming'
+import type { HabitatStatus } from '../hooks/useHabitat'
+import { CHECKLIST, type VeldGegevens } from '../data/veldchecklist'
+import type { ProfielReden } from '../utils/relevanteProfielen'
+import WerkKalender from './WerkKalender'
+import { HABITAT_BRONNEN, KADASTER_PERCELEN, UNIELIJST } from '../config/bronnen'
 
 interface Props {
   gebied: Feature<Polygon>
@@ -28,6 +33,11 @@ interface Props {
   natura2000: Natura2000Status
   waarnemingen: WaarnemingenStatus
   soorten: Soort[]
+  habitat: HabitatStatus
+  veld: VeldGegevens
+  /** Conceptconclusie (door de gebruiker aangepast of automatisch) */
+  conclusie: string
+  profielen: ProfielReden[]
   onSluiten: () => void
 }
 
@@ -50,6 +60,10 @@ export default function Rapport(props: Props) {
   const beschermd = soorten.filter((s) => s.bescherming).sort((a, b) => b.aantal - a.aantal)
   const vogelsGezien = soorten.some((s) => s.groep === 'vogels')
   const soortenMap = new Map(soorten.map((s) => [s.key, s]))
+  const landgebruikTotaal =
+    props.habitat.soort === 'klaar'
+      ? props.habitat.resultaat.landgebruik.reduce((s, x) => s + x.m2, 0)
+      : 1
 
   return (
     <div className="rapport-pagina">
@@ -162,7 +176,67 @@ export default function Rapport(props: Props) {
         </section>
 
         <section>
-          <h2>3. Waargenomen soorten (GBIF)</h2>
+          <h2>3. Habitat en potentie</h2>
+          {props.habitat.soort !== 'klaar' ? (
+            <p className="rapport-waarschuwing">
+              Habitatcheck niet beschikbaar
+              {props.habitat.soort === 'fout'
+                ? `: ${props.habitat.melding}`
+                : ' (nog bezig met laden)'}
+              .
+            </p>
+          ) : (
+            <>
+              <table className="rapport-tabel">
+                <thead>
+                  <tr>
+                    <th>Soortgroep</th>
+                    <th>Potentie</th>
+                    <th>Aanwijzing (kaartgegevens)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {props.habitat.resultaat.potentie.map((p) => (
+                    <tr key={p.soortgroep}>
+                      <td>{p.soortgroep}</td>
+                      <td>{p.niveau === 'hoog' ? 'aannemelijk' : 'mogelijk'}</td>
+                      <td>{p.reden}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p>
+                <strong>Landgebruik:</strong>{' '}
+                {props.habitat.resultaat.landgebruik
+                  .slice(0, 6)
+                  .map((l) => `${l.type} ${Math.round((l.m2 / landgebruikTotaal) * 100)}%`)
+                  .join(', ') || 'onbekend'}
+                .<br />
+                <strong>Gebouwen:</strong> {props.habitat.resultaat.panden.length}
+                {props.habitat.resultaat.panden.some((p) => p.bouwjaar) &&
+                  ` (bouwjaar ${Math.min(...props.habitat.resultaat.panden.filter((p) => p.bouwjaar).map((p) => p.bouwjaar!))}–${Math.max(...props.habitat.resultaat.panden.filter((p) => p.bouwjaar).map((p) => p.bouwjaar!))})`}
+                . <strong>Geregistreerde bomen:</strong> {props.habitat.resultaat.bomen}.{' '}
+                <strong>Water:</strong>{' '}
+                {props.habitat.resultaat.water.vlakkenInGebied > 0 ||
+                props.habitat.resultaat.water.slotenMeterInGebied > 0
+                  ? 'aanwezig in het gebied'
+                  : props.habitat.resultaat.water.vlakkenNabij +
+                        props.habitat.resultaat.water.slotenNabij >
+                      0
+                    ? 'binnen 100 m'
+                    : 'niet binnen 100 m'}
+                .
+              </p>
+              <p className="voetnoot">
+                Vuistregels op basis van Top10NL, BAG en BGT; geen vervanging van de
+                potentiebepaling in het veld.
+              </p>
+            </>
+          )}
+        </section>
+
+        <section>
+          <h2>4. Waargenomen soorten (GBIF)</h2>
           {!resultaat && (
             <p className="rapport-waarschuwing">
               Waarnemingen niet beschikbaar
@@ -206,13 +280,26 @@ export default function Rapport(props: Props) {
                   })}
                 </tbody>
               </table>
+              <h3>Invasieve exoten (EU-Unielijst)</h3>
+              {soorten.some((s) => s.exoot) ? (
+                <p>
+                  {soorten
+                    .filter((s) => s.exoot)
+                    .map((s) => `${s.nederlandseNaam ?? s.wetenschappelijkeNaam} (${s.aantal}×)`)
+                    .join(', ')}
+                  . Voor deze soorten gelden verboden op o.a. bezit, vervoer en verspreiding; de
+                  grondeigenaar heeft een zorgplicht. Let op bij grondverzet.
+                </p>
+              ) : (
+                <p>Geen soorten van de Unielijst waargenomen.</p>
+              )}
               <p>De volledige soortenlijst staat in de bijlage.</p>
             </>
           )}
         </section>
 
         <section>
-          <h2>4. Beschermde soorten (indicatief)</h2>
+          <h2>5. Beschermde soorten (indicatief)</h2>
           <p className="rapport-waarschuwing">
             De markering &lsquo;beschermd&rsquo; is gebaseerd op een kleine, indicatieve startlijst
             (versie {LIJST_VERSIE}). Deze lijst is niet volledig en moet door een ecoloog worden
@@ -258,7 +345,75 @@ export default function Rapport(props: Props) {
         </section>
 
         <section>
-          <h2>5. Bronnen</h2>
+          <h2>6. Veldbezoek</h2>
+          {!props.veld.datum && Object.keys(props.veld.antwoorden).length === 0 ? (
+            <p className="rapport-waarschuwing">
+              Nog geen veldbezoek vastgelegd. Een veldbezoek door een ecoloog is nodig om de
+              potentie te beoordelen.
+            </p>
+          ) : (
+            <>
+              <dl className="kerngegevens">
+                <dt>Datum</dt>
+                <dd>{props.veld.datum ? formatDatum(props.veld.datum) : '–'}</dd>
+                <dt>Ecoloog</dt>
+                <dd>{props.veld.ecoloog || '–'}</dd>
+                <dt>Weer</dt>
+                <dd>{props.veld.weer || '–'}</dd>
+              </dl>
+              {CHECKLIST.map((groep) => {
+                const items = groep.items.filter((i) => props.veld.antwoorden[i.id])
+                const notitie = props.veld.notities[groep.id]
+                if (items.length === 0 && !notitie) return null
+                return (
+                  <div key={groep.id}>
+                    <h3>{groep.naam}</h3>
+                    {items.length > 0 && (
+                      <table className="rapport-tabel">
+                        <tbody>
+                          {items.map((i) => (
+                            <tr key={i.id}>
+                              <td>{i.tekst}</td>
+                              <td>{props.veld.antwoorden[i.id]}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                    {notitie && <p className="notitie">{notitie}</p>}
+                  </div>
+                )
+              })}
+              {props.veld.fotos.length > 0 && (
+                <div className="rapport-fotos">
+                  {props.veld.fotos.map((f, i) => (
+                    <figure key={f.id}>
+                      <img src={f.data} alt={f.bijschrift || `Foto ${i + 1}`} />
+                      <figcaption>
+                        Foto {i + 1}
+                        {f.bijschrift && `: ${f.bijschrift}`}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </section>
+
+        <section>
+          <h2>7. Conclusie en planning</h2>
+          <p className="conclusie-tekst">{props.conclusie}</p>
+          <h3>Werkkalender</h3>
+          <p className="voetnoot">
+            Wanneer geven werkzaamheden (sloop, kap, grondwerk) het minste risico voor de
+            soortgroepen die hier spelen? (indicatief)
+          </p>
+          <WerkKalender profielen={props.profielen} compact={kaartBreedte < 600} />
+        </section>
+
+        <section>
+          <h2>8. Bronnen</h2>
           <ul className="bronnen">
             <li>
               {BRT_ACHTERGRONDKAART.naam}, WMTS. Geraadpleegd{' '}
@@ -289,6 +444,14 @@ export default function Rapport(props: Props) {
               Nederlandse soortnamen: GBIF Species API (bij voorkeur Nederlands Soortenregister).
             </li>
             <li>Indicatieve lijst beschermde soorten, Quickscan Kaart, versie {LIJST_VERSIE}.</li>
+            <li>
+              Habitatcheck: TOP10NL en BAG (Kadaster) en BGT, via PDOK OGC API (
+              {HABITAT_BRONNEN.bagPand.replace('https://', '').split('/collections')[0]} e.a.).
+              {props.habitat.soort === 'klaar' &&
+                ` Opgehaald ${formatTijdstip(props.habitat.resultaat.opgehaaldOp)}.`}
+            </li>
+            {props.herkomst?.startsWith('Kadastraal perceel') && <li>{KADASTER_PERCELEN.naam}.</li>}
+            <li>Invasieve exoten: {UNIELIJST.naam}.</li>
           </ul>
         </section>
 

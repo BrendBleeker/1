@@ -942,3 +942,39 @@ input[type='date'] {
   font-size: 0.88em;
   line-height: 1.45;
 }
+
+/* ---------- Projecten ---------- */
+.projecten-menu select {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 0.9em;
+  padding: 0.35rem;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  background: white;
+}
+.opgeslagen {
+  margin: 0;
+}
+.conclusie-tekst,
+.notitie {
+  white-space: pre-wrap;
+}
+.rapport-fotos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+.rapport-fotos figure {
+  margin: 0;
+  break-inside: avoid;
+}
+.rapport-fotos img {
+  width: 100%;
+  border-radius: 4px;
+}
+.rapport-fotos figcaption {
+  font-size: 0.85em;
+  color: var(--tekst-zacht);
+}

@@ -7,7 +7,8 @@ import type { Feature, Polygon } from 'geojson'
 
 /** Een gebied dat van buitenaf op de kaart gezet wordt (perceel, bestand, link, project). */
 export interface ExternGebied {
-  gebied: Feature<Polygon>
+  /** null = huidige tekening wissen (bijv. bij een nieuw project) */
+  gebied: Feature<Polygon> | null
   /** Verhogen om hetzelfde gebied opnieuw te plaatsen */
   versie: number
 }
@@ -90,9 +91,15 @@ export default function TekenGereedschap({ onGebiedGewijzigd, extern }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map])
 
-  // Gebied van buitenaf op de kaart zetten en erop inzoomen
+  // Gebied van buitenaf op de kaart zetten (of wissen) en erop inzoomen
   useEffect(() => {
     if (!extern) return
+    if (!extern.gebied) {
+      if (huidigeLaag.current) map.removeLayer(huidigeLaag.current)
+      huidigeLaag.current = null
+      melden.current(null, 'verwijderd')
+      return
+    }
     const ringen = extern.gebied.geometry.coordinates.map((ring) =>
       ring.map(([lng, lat]) => L.latLng(lat, lng)),
     )
