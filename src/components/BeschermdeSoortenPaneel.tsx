@@ -16,9 +16,9 @@ export default function BeschermdeSoortenPaneel({ soorten }: Props) {
     <section>
       <h2>Beschermde soorten</h2>
       <p className="melding melding-indicatief">
-        <strong>Indicatief.</strong> De markering &lsquo;beschermd&rsquo; en de
-        onderzoeksperiodes komen uit een kleine startlijst (versie {LIJST_VERSIE}). Deze lijst is
-        niet volledig en moet door een ecoloog gecontroleerd worden.
+        <strong>Indicatief.</strong> De markering &lsquo;beschermd&rsquo; en de onderzoeksperiodes
+        komen uit een kleine startlijst (versie {LIJST_VERSIE}). Deze lijst is niet volledig en moet
+        door een ecoloog gecontroleerd worden.
       </p>
 
       {beschermd.length > 0 ? (
@@ -41,8 +41,8 @@ export default function BeschermdeSoortenPaneel({ soorten }: Props) {
 
       <h3>Soortenkalender</h3>
       <p className="voetnoot">
-        Gekleurde maanden: periode waarin onderzoek naar de soort geschikt is (indicatief). Ga
-        met de muis op een rij staan voor een toelichting; het rapport bevat alle toelichtingen.
+        Gekleurde maanden: periode waarin onderzoek naar de soort geschikt is (indicatief). Ga met
+        de muis op een rij staan voor een toelichting; het rapport bevat alle toelichtingen.
       </p>
       <Soortenkalender
         beschermdeSoorten={beschermd}

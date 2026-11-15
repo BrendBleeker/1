@@ -60,11 +60,10 @@ export default function WaarnemingenPaneel(props: Props) {
 
       {status.soort === 'klaar' && status.resultaat.totaal === 0 && (
         <p className="melding melding-info">
-          GBIF heeft geen waarnemingen in dit gebied tussen{' '}
-          {formatDatum(status.resultaat.vanaf)} en {formatDatum(status.resultaat.tot)}. Dat
-          betekent niet dat er geen soorten voorkomen: er is misschien nooit gekeken, of de
-          gegevens staan in een bron die niet in GBIF zit (zoals de NDFF). Probeer eventueel een
-          grotere buffer.
+          GBIF heeft geen waarnemingen in dit gebied tussen {formatDatum(status.resultaat.vanaf)} en{' '}
+          {formatDatum(status.resultaat.tot)}. Dat betekent niet dat er geen soorten voorkomen: er
+          is misschien nooit gekeken, of de gegevens staan in een bron die niet in GBIF zit (zoals
+          de NDFF). Probeer eventueel een grotere buffer.
         </p>
       )}
 

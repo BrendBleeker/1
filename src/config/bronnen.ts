@@ -116,3 +116,20 @@ export const KADASTER_PERCELEN = {
   naam: 'Kadastrale kaart (BRK, Kadaster via PDOK)',
   itemsUrl: 'https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items',
 }
+
+/** Open PDOK-data voor de habitatcheck (OGC API Features, CORS toegestaan). */
+export const HABITAT_BRONNEN = {
+  top10nlTerrein: 'https://api.pdok.nl/kadaster/brt-top10nl/ogc/v1/collections/terrein_vlak/items',
+  top10nlWaterVlak:
+    'https://api.pdok.nl/kadaster/brt-top10nl/ogc/v1/collections/waterdeel_vlak/items',
+  top10nlWaterLijn:
+    'https://api.pdok.nl/kadaster/brt-top10nl/ogc/v1/collections/waterdeel_lijn/items',
+  bagPand: 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/pand/items',
+  bgtVegetatiePunt: 'https://api.pdok.nl/lv/bgt/ogc/v1/collections/vegetatieobject_punt/items',
+}
+
+/** GBIF-checklist met de EU-Unielijst van invasieve exoten (INBO, CC0). */
+export const UNIELIJST = {
+  naam: 'List of Invasive Alien Species of Union concern (INBO, via GBIF)',
+  datasetKey: '79d65658-526c-4c78-9d24-1870d67f8439',
+}

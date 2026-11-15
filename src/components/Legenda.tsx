@@ -31,8 +31,8 @@ export default function Legenda() {
         </li>
       </ul>
       <p className="voetnoot">
-        Lagenmenu rechtsboven op de kaart: kaart, actuele en historische luchtfoto&rsquo;s,
-        Natura 2000 en NNN.
+        Lagenmenu rechtsboven op de kaart: kaart, actuele en historische luchtfoto&rsquo;s, Natura
+        2000 en NNN.
       </p>
     </section>
   )

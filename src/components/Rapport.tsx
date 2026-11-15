@@ -261,8 +261,8 @@ export default function Rapport(props: Props) {
           <h2>5. Bronnen</h2>
           <ul className="bronnen">
             <li>
-              {BRT_ACHTERGRONDKAART.naam}, WMTS. Geraadpleegd {formatDatum(gemaaktOp.toISOString().slice(0, 10))}
-              .
+              {BRT_ACHTERGRONDKAART.naam}, WMTS. Geraadpleegd{' '}
+              {formatDatum(gemaaktOp.toISOString().slice(0, 10))}.
             </li>
             <li>{LUCHTFOTO.naam}, WMTS (beschikbaar als kaartlaag in de app).</li>
             <li>

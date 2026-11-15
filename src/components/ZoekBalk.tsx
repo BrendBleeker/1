@@ -35,8 +35,7 @@ export default function ZoekBalk({ onGevonden }: Props) {
           setOpen(true)
         })
         .catch((e: unknown) => {
-          if (!afbreken.signal.aborted)
-            setFout(e instanceof Error ? e.message : 'Zoeken mislukt.')
+          if (!afbreken.signal.aborted) setFout(e instanceof Error ? e.message : 'Zoeken mislukt.')
         })
     }, 300)
     return () => {

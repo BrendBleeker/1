@@ -34,7 +34,8 @@ export function naarGeoJSON(gebied: Feature<Polygon>, naam: string): string {
 export function naarKML(gebied: Feature<Polygon>, naam: string): string {
   const ring = (r: Position[]) => r.map(([x, y]) => `${x},${y},0`).join(' ')
   const [buiten, ...gaten] = gebied.geometry.coordinates
-  const escape = (s: string) => s.replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]!)
+  const escape = (s: string) =>
+    s.replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]!)
   return `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
@@ -107,7 +108,8 @@ function grootstePolygoon(geometrieen: Geometry[]): Polygon | null {
 
 function geometrieenUitGeoJSON(data: unknown): Geometry[] {
   const obj = data as { type?: string; features?: { geometry: Geometry }[]; geometry?: Geometry }
-  if (obj.type === 'FeatureCollection') return (obj.features ?? []).map((f) => f.geometry).filter(Boolean)
+  if (obj.type === 'FeatureCollection')
+    return (obj.features ?? []).map((f) => f.geometry).filter(Boolean)
   if (obj.type === 'Feature' && obj.geometry) return [obj.geometry]
   if (obj.type) return [obj as Geometry]
   return []
@@ -134,7 +136,9 @@ function geometrieenUitKML(tekst: string): Geometry[] {
  * Bevat het bestand meerdere vlakken, dan nemen we het grootste.
  * Coördinaten moeten in WGS84 (graden) staan; RD-coördinaten (meters) worden herkend en geweigerd.
  */
-export async function leesPlangebied(bestand: File): Promise<{ gebied: Feature<Polygon>; melding?: string }> {
+export async function leesPlangebied(
+  bestand: File,
+): Promise<{ gebied: Feature<Polygon>; melding?: string }> {
   const tekst = await bestand.text()
   const isKml = bestand.name.toLowerCase().endsWith('.kml') || tekst.trimStart().startsWith('<')
   let geometrieen: Geometry[]
@@ -159,6 +163,9 @@ export async function leesPlangebied(bestand: File): Promise<{ gebied: Feature<P
   const aantalVlakken = geometrieen.length
   return {
     gebied: { type: 'Feature', properties: {}, geometry: polygoon },
-    melding: aantalVlakken > 1 ? `Het bestand bevat ${aantalVlakken} vlakken; het grootste is gebruikt.` : undefined,
+    melding:
+      aantalVlakken > 1
+        ? `Het bestand bevat ${aantalVlakken} vlakken; het grootste is gebruikt.`
+        : undefined,
   }
 }

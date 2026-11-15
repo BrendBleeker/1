@@ -22,7 +22,8 @@ export function leesDeellink(): { gebied: Feature<Polygon>; bufferM?: number } |
     const coordinates = tekst
       .split('|')
       .map((ring) => ring.split(';').map((p) => p.split(',').map(Number)))
-    if (coordinates[0].length < 4 || coordinates.flat(2).some((n) => !Number.isFinite(n))) return null
+    if (coordinates[0].length < 4 || coordinates.flat(2).some((n) => !Number.isFinite(n)))
+      return null
     const buffer = Number(params.get('buffer'))
     return {
       gebied: { type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates } },

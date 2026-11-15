@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Feature, Polygon } from 'geojson'
 import Kaart from './components/Kaart'
 import Zijpaneel from './components/Zijpaneel'
@@ -12,6 +12,10 @@ import type { Soort } from './types'
 import { zoekBescherming } from './utils/bescherming'
 import { leesDeellink } from './utils/deellink'
 import { zoekPerceelOpPunt } from './services/kadaster'
+import { haalUnielijstOp } from './services/exoten'
+import { useHabitat } from './hooks/useHabitat'
+import HabitatPaneel from './components/HabitatPaneel'
+import ExotenPaneel from './components/ExotenPaneel'
 
 // Een plangebied uit een gedeelde link (eenmalig bij het openen van de app)
 const uitLink = leesDeellink()
@@ -37,6 +41,17 @@ export default function App() {
   // Perceel kiezen door op de kaart te klikken
   const [perceelModus, setPerceelModus] = useState(false)
   const [perceelMelding, setPerceelMelding] = useState<string | null>(null)
+  // Gebouwen op de kaart kleuren naar bouwjaar
+  const [toonPanden, setToonPanden] = useState(false)
+  // EU-Unielijst invasieve exoten (GBIF-soortsleutels)
+  const [unielijst, setUnielijst] = useState<Map<number, string>>(new Map())
+  const [unielijstFout, setUnielijstFout] = useState<string | null>(null)
+
+  useEffect(() => {
+    haalUnielijstOp()
+      .then(setUnielijst)
+      .catch((e: unknown) => setUnielijstFout(e instanceof Error ? e.message : 'onbekende fout'))
+  }, [])
 
   const bijGebiedGewijzigd = useCallback((nieuw: Feature<Polygon> | null, bron: GebiedBron) => {
     setGebied(nieuw)
@@ -59,7 +74,9 @@ export default function App() {
       try {
         const resultaat = await zoekPerceelOpPunt(lat, lng)
         if (!resultaat) {
-          setPerceelMelding('Geen perceel gevonden op deze plek. Zoom verder in en probeer opnieuw.')
+          setPerceelMelding(
+            'Geen perceel gevonden op deze plek. Zoom verder in en probeer opnieuw.',
+          )
           return
         }
         plaatsGebied(resultaat.gebied, `Kadastraal perceel ${resultaat.info.aanduiding}`)
@@ -76,6 +93,8 @@ export default function App() {
   const natura2000 = useNatura2000(gebied)
   // Haalt automatisch GBIF-waarnemingen op voor gebied + buffer
   const waarnemingen = useWaarnemingen(gebied, bufferM)
+  // Landgebruik, water, gebouwen en bomen in het gebied
+  const habitat = useHabitat(gebied)
 
   // Soortenlijst aangevuld met Nederlandse namen en bescherming (indicatieve startlijst)
   const soorten = useMemo<Soort[]>(() => {
@@ -86,9 +105,10 @@ export default function App() {
         ...s,
         nederlandseNaam: waarnemingen.namen.get(s.key) ?? bescherming?.nederlandseNaam,
         bescherming,
+        exoot: unielijst.has(s.key),
       }
     })
-  }, [waarnemingen.status, waarnemingen.namen])
+  }, [waarnemingen.status, waarnemingen.namen, unielijst])
 
   const soortenPerKey = useMemo(() => new Map(soorten.map((s) => [s.key, s])), [soorten])
 
@@ -128,6 +148,17 @@ export default function App() {
           }}
           perceelMelding={perceelMelding}
           onGeimporteerd={plaatsGebied}
+          extra={{
+            overzicht: (
+              <HabitatPaneel
+                status={habitat.status}
+                onOpnieuw={habitat.opnieuw}
+                toonPanden={toonPanden}
+                onToonPanden={setToonPanden}
+              />
+            ),
+            soorten: <ExotenPaneel soorten={soorten} fout={unielijstFout} />,
+          }}
         />
         <main className="kaart-container">
           <Kaart
@@ -145,6 +176,9 @@ export default function App() {
             extern={extern}
             vliegNaar={vliegNaar}
             onKaartKlik={perceelModus ? bijKaartKlik : null}
+            panden={
+              toonPanden && habitat.status.soort === 'klaar' ? habitat.status.resultaat.panden : []
+            }
           />
         </main>
         {/* Alleen zichtbaar op de telefoon (zie index.css) */}

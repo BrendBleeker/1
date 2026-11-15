@@ -79,7 +79,11 @@ export default function Soortenlijst({ soorten, geselecteerdeSoort, onSelecteer 
                 <span className="groep-stip" style={{ background: SOORTGROEPEN[g].kleur }} />
                 {SOORTGROEPEN[g].naam} <small>({inGroep.length})</small>
               </summary>
-              <Tabel soorten={inGroep} geselecteerd={geselecteerdeSoort} onSelecteer={onSelecteer} />
+              <Tabel
+                soorten={inGroep}
+                geselecteerd={geselecteerdeSoort}
+                onSelecteer={onSelecteer}
+              />
             </details>
           )
         })
@@ -113,7 +117,9 @@ function Tabel({
           <tr
             key={s.key}
             className={
-              (s.bescherming ? 'beschermd ' : '') + (geselecteerd === s.key ? 'geselecteerd' : '')
+              (s.bescherming ? 'beschermd ' : '') +
+              (s.exoot ? 'exoot ' : '') +
+              (geselecteerd === s.key ? 'geselecteerd' : '')
             }
             onClick={() => onSelecteer(geselecteerd === s.key ? null : s.key)}
             title="Klik om alleen deze soort op de kaart te tonen"
@@ -126,6 +132,12 @@ function Tabel({
                 <>
                   <br />
                   <span className="label label-beschermd">{s.bescherming.regime}</span>
+                </>
+              )}
+              {s.exoot && (
+                <>
+                  <br />
+                  <span className="label label-exoot">Invasieve exoot</span>
                 </>
               )}
             </td>

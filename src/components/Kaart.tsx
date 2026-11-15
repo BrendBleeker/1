@@ -13,6 +13,8 @@ import TekenGereedschap, { type ExternGebied, type GebiedBron } from './TekenGer
 import KaartActies, { type VliegNaar } from './KaartActies'
 import WaarnemingenLaag from './WaarnemingenLaag'
 import KaartGrootteBijwerken from './KaartGrootteBijwerken'
+import PandenLaag from './PandenLaag'
+import type { Pand } from '../services/habitat'
 import type { Soort, Waarneming } from '../types'
 import {
   BRT_ACHTERGRONDKAART,
@@ -40,6 +42,8 @@ interface Props {
   extern: ExternGebied | null
   vliegNaar: VliegNaar | null
   onKaartKlik: ((lat: number, lng: number) => void) | null
+  /** Gebouwen om op de kaart te tonen (gekleurd naar bouwjaar) */
+  panden: Pand[]
 }
 
 /** De kaart van Nederland met lagenmenu en tekengereedschap. */
@@ -54,6 +58,7 @@ export default function Kaart({
   extern,
   vliegNaar,
   onKaartKlik,
+  panden,
 }: Props) {
   // De 1 km-zone rond het getekende gebied (alleen ter informatie op de kaart)
   const zone = useMemo(
@@ -143,6 +148,8 @@ export default function Kaart({
           style={{ color: '#2f80c1', weight: 1.5, dashArray: '2 5', fill: false }}
         />
       )}
+
+      <PandenLaag panden={panden} />
 
       <WaarnemingenLaag
         waarnemingen={waarnemingen}

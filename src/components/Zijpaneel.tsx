@@ -158,7 +158,8 @@ export default function Zijpaneel(props: ZijpaneelProps) {
 
           {tab === 'planning' &&
             (props.extra?.planning ?? <p className="voetnoot">Nog niet beschikbaar.</p>)}
-          {tab === 'veld' && (props.extra?.veld ?? <p className="voetnoot">Nog niet beschikbaar.</p>)}
+          {tab === 'veld' &&
+            (props.extra?.veld ?? <p className="voetnoot">Nog niet beschikbaar.</p>)}
         </>
       )}
     </aside>

@@ -93,7 +93,11 @@ export default function GebiedGereedschap(props: Props) {
             type="button"
             className="knop"
             onClick={() =>
-              downloadBestand(`${naam}.geojson`, naarGeoJSON(gebied, projectnaam), 'application/geo+json')
+              downloadBestand(
+                `${naam}.geojson`,
+                naarGeoJSON(gebied, projectnaam),
+                'application/geo+json',
+              )
             }
             title="Voor QGIS of QField"
           >
@@ -117,7 +121,9 @@ export default function GebiedGereedschap(props: Props) {
             type="button"
             className="knop"
             disabled={soorten.length === 0}
-            onClick={() => downloadBestand(`${naam}_soorten.csv`, soortenNaarCSV(soorten), 'text/csv')}
+            onClick={() =>
+              downloadBestand(`${naam}_soorten.csv`, soortenNaarCSV(soorten), 'text/csv')
+            }
             title="Soortenlijst voor Excel"
           >
             ⬇ Soorten (CSV)

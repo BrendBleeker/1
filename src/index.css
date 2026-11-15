@@ -760,3 +760,55 @@ progress {
   color: var(--accent);
   border-bottom-color: var(--accent);
 }
+
+/* ---------- Habitat en exoten ---------- */
+.potentie-lijst,
+.bouwjaar-lijst,
+.balk-lijst {
+  list-style: none;
+  padding: 0;
+  margin: 0.3rem 0;
+}
+.potentie-lijst li {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--rand);
+}
+.bouwjaar-lijst li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.balk-lijst li {
+  display: grid;
+  grid-template-columns: 11rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9em;
+  margin-bottom: 0.2rem;
+}
+.balk-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.balk {
+  background: var(--rand);
+  height: 0.6rem;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.balk span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.balk-waarde {
+  text-align: right;
+  color: var(--tekst-zacht);
+}
+.label-exoot {
+  background: #8e44ad;
+}
+.soorten-tabel tr.exoot {
+  background: #f4ecf7;
+}

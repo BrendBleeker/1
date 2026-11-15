@@ -29,17 +29,22 @@ export default function WaarnemingenLaag({ waarnemingen, soorten, geselecteerdeS
       {gesorteerd.map((w) => {
         const soort = soorten.get(w.soortKey)
         const beschermd = !!soort?.bescherming
-        const kleur = beschermd ? '#c0392b' : SOORTGROEPEN[soort?.groep ?? 'overig'].kleur
+        const exoot = !!soort?.exoot
+        const kleur = beschermd
+          ? '#c0392b'
+          : exoot
+            ? '#8e44ad'
+            : SOORTGROEPEN[soort?.groep ?? 'overig'].kleur
         return (
           <CircleMarker
             key={w.key}
             center={[w.lat, w.lng]}
-            radius={beschermd ? 7 : 4}
+            radius={beschermd || exoot ? 7 : 4}
             pathOptions={{
-              color: beschermd ? '#ffffff' : kleur,
-              weight: beschermd ? 2 : 1,
+              color: beschermd || exoot ? '#ffffff' : kleur,
+              weight: beschermd || exoot ? 2 : 1,
               fillColor: kleur,
-              fillOpacity: beschermd ? 0.95 : 0.7,
+              fillOpacity: beschermd || exoot ? 0.95 : 0.7,
             }}
           >
             <Popup>
@@ -52,6 +57,12 @@ export default function WaarnemingenLaag({ waarnemingen, soorten, geselecteerdeS
                 <>
                   <br />
                   <span className="label label-beschermd">{soort?.bescherming?.regime}</span>
+                </>
+              )}
+              {exoot && (
+                <>
+                  <br />
+                  <span className="label label-exoot">Invasieve exoot (Unielijst)</span>
                 </>
               )}
               <br />

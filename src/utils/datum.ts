@@ -16,4 +16,17 @@ export function formatTijdstip(d: Date): string {
   return d.toLocaleString('nl-NL', { dateStyle: 'long', timeStyle: 'short' })
 }
 
-export const MAANDEN_KORT = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec']
+export const MAANDEN_KORT = [
+  'jan',
+  'feb',
+  'mrt',
+  'apr',
+  'mei',
+  'jun',
+  'jul',
+  'aug',
+  'sep',
+  'okt',
+  'nov',
+  'dec',
+]

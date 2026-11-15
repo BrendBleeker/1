@@ -75,7 +75,9 @@ function datumTekst(d: Date): string {
 async function haalJson<T>(url: string, signal?: AbortSignal): Promise<T> {
   const antwoord = await fetchMetHerhaling(url, signal)
   if (antwoord.status === 429) {
-    throw new Error('GBIF krijgt op dit moment te veel verzoeken (429). Wacht een minuut en probeer het opnieuw.')
+    throw new Error(
+      'GBIF krijgt op dit moment te veel verzoeken (429). Wacht een minuut en probeer het opnieuw.',
+    )
   }
   if (!antwoord.ok) throw new Error(`GBIF gaf foutcode ${antwoord.status}.`)
   return (await antwoord.json()) as T
@@ -125,12 +127,14 @@ export async function haalWaarnemingenOp(
   onVoortgang?.(0, teHalen)
   for (let i = 0; i < offsets.length; i += 2) {
     const paginas = await Promise.all(
-      offsets.slice(i, i + 2).map((offset) =>
-        haalJson<GbifZoekAntwoord>(
-          `${GBIF.zoekUrl}?${filters}&limit=${GBIF.paginaGrootte}&offset=${offset}`,
-          signal,
+      offsets
+        .slice(i, i + 2)
+        .map((offset) =>
+          haalJson<GbifZoekAntwoord>(
+            `${GBIF.zoekUrl}?${filters}&limit=${GBIF.paginaGrootte}&offset=${offset}`,
+            signal,
+          ),
         ),
-      ),
     )
     for (const p of paginas) records.push(...p.results)
     onVoortgang?.(Math.min(records.length, teHalen), teHalen)
@@ -171,12 +175,14 @@ export async function haalWaarnemingenOp(
   const ontbrekend = [...aantallen.keys()].filter((k) => !soorten.has(k))
   for (let i = 0; i < ontbrekend.length; i += 3) {
     const details = await Promise.all(
-      ontbrekend.slice(i, i + 3).map((k) =>
-        haalJson<{ key: number; canonicalName?: string; kingdom?: string; class?: string }>(
-          `${GBIF.soortUrl}/${k}`,
-          signal,
-        ).catch(() => null),
-      ),
+      ontbrekend
+        .slice(i, i + 3)
+        .map((k) =>
+          haalJson<{ key: number; canonicalName?: string; kingdom?: string; class?: string }>(
+            `${GBIF.soortUrl}/${k}`,
+            signal,
+          ).catch(() => null),
+        ),
     )
     for (const d of details) {
       if (!d) continue

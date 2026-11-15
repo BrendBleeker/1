@@ -45,5 +45,8 @@ export async function zoekPerceelOpPunt(
     aanduiding: `${p.kadastrale_gemeente_waarde} ${p.sectie} ${p.perceelnummer}`,
     grootteM2: Number(p.kadastrale_grootte_waarde),
   }
-  return { gebied: { type: 'Feature', properties: { perceel: info.aanduiding }, geometry: geometrie }, info }
+  return {
+    gebied: { type: 'Feature', properties: { perceel: info.aanduiding }, geometry: geometrie },
+    info,
+  }
 }

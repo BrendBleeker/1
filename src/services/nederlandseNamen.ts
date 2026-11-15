@@ -62,7 +62,10 @@ export async function haalNederlandseNamenOp(
     await Promise.all(
       teHalen.slice(i, i + 4).map(async (k) => {
         try {
-          const r = await fetchMetHerhaling(`${GBIF.soortUrl}/${k}/vernacularNames?limit=300`, signal)
+          const r = await fetchMetHerhaling(
+            `${GBIF.soortUrl}/${k}/vernacularNames?limit=300`,
+            signal,
+          )
           if (!r.ok) return // naam blijft leeg; geen ramp
           const naam = kiesNaam((await r.json()) as VernacularAntwoord)
           cache[k] = naam

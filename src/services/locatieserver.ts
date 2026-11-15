@@ -14,7 +14,10 @@ export interface Locatie {
 }
 
 /** Suggesties terwijl je typt (adressen, straten, postcodes, plaatsen, gemeenten). */
-export async function zoekSuggesties(tekst: string, signal?: AbortSignal): Promise<Zoeksuggestie[]> {
+export async function zoekSuggesties(
+  tekst: string,
+  signal?: AbortSignal,
+): Promise<Zoeksuggestie[]> {
   const params = new URLSearchParams({
     q: tekst,
     rows: '7',
