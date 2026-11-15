@@ -8,8 +8,10 @@ import {
   GeoJSON,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import type { Feature, Polygon } from 'geojson'
+import type { Feature, MultiPolygon, Polygon } from 'geojson'
 import TekenGereedschap from './TekenGereedschap'
+import WaarnemingenLaag from './WaarnemingenLaag'
+import type { Soort, Waarneming } from '../types'
 import {
   BRT_ACHTERGRONDKAART,
   LUCHTFOTO,
@@ -24,10 +26,22 @@ import { bufferGebied } from '../utils/geometrie'
 interface Props {
   gebied: Feature<Polygon> | null
   onGebiedGewijzigd: (gebied: Feature<Polygon> | null) => void
+  /** Gebied + buffer waarin naar waarnemingen gezocht wordt (null = geen buffer) */
+  zoekgebied: Feature<Polygon | MultiPolygon> | null
+  waarnemingen: Waarneming[]
+  soorten: Map<number, Soort>
+  geselecteerdeSoort: number | null
 }
 
 /** De kaart van Nederland met lagenmenu en tekengereedschap. */
-export default function Kaart({ gebied, onGebiedGewijzigd }: Props) {
+export default function Kaart({
+  gebied,
+  onGebiedGewijzigd,
+  zoekgebied,
+  waarnemingen,
+  soorten,
+  geselecteerdeSoort,
+}: Props) {
   // De 1 km-zone rond het getekende gebied (alleen ter informatie op de kaart)
   const zone = useMemo(
     () => (gebied ? bufferGebied(gebied, NATURA2000_ZOEKAFSTAND_M) : null),
@@ -40,6 +54,7 @@ export default function Kaart({ gebied, onGebiedGewijzigd }: Props) {
       zoom={NEDERLAND_ZOOM}
       minZoom={6}
       maxZoom={LUCHTFOTO.maxZoom}
+      preferCanvas // sneller bij duizenden waarnemingspunten
       className="kaart"
       // Alleen tijdens ontwikkelen: kaart bereikbaar maken voor tests in de browser
       ref={(kaart) => {
@@ -100,6 +115,21 @@ export default function Kaart({ gebied, onGebiedGewijzigd }: Props) {
           style={{ color: '#d35400', weight: 1.5, dashArray: '6 6', fill: false }}
         />
       )}
+
+      {zoekgebied && (
+        <GeoJSON
+          key={JSON.stringify(zoekgebied.geometry.coordinates)}
+          data={zoekgebied}
+          interactive={false}
+          style={{ color: '#2f80c1', weight: 1.5, dashArray: '2 5', fill: false }}
+        />
+      )}
+
+      <WaarnemingenLaag
+        waarnemingen={waarnemingen}
+        soorten={soorten}
+        geselecteerdeSoort={geselecteerdeSoort}
+      />
 
       <ScaleControl imperial={false} position="bottomright" />
       <TekenGereedschap onGebiedGewijzigd={onGebiedGewijzigd} />

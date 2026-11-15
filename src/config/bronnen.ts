@@ -63,3 +63,26 @@ export const NATURA2000_ZOEKAFSTAND_M = 1000
 /** Startweergave: heel Nederland. */
 export const NEDERLAND_MIDDEN: [number, number] = [52.15, 5.3]
 export const NEDERLAND_ZOOM = 8
+
+/**
+ * GBIF Occurrence Search API (open data, CORS toegestaan).
+ * Documentatie: https://techdocs.gbif.org/en/openapi/v1/occurrence
+ * - maximaal 300 resultaten per verzoek (limit)
+ * - geometry als WKT-polygoon, tegen de klok in
+ */
+export const GBIF = {
+  naam: 'GBIF – Global Biodiversity Information Facility',
+  zoekUrl: 'https://api.gbif.org/v1/occurrence/search',
+  soortUrl: 'https://api.gbif.org/v1/species',
+  websiteZoekUrl: 'https://www.gbif.org/occurrence/search',
+  /** Max. resultaten per verzoek (harde grens van GBIF) */
+  paginaGrootte: 300,
+  /** Max. aantal waarnemingen dat we als punten ophalen */
+  maxWaarnemingen: 5000,
+  /** Hoeveel jaar terug we zoeken */
+  jarenTerug: 10,
+}
+
+/** Keuzes voor de zoekbuffer rond het gebied bij het zoeken naar waarnemingen (meters). */
+export const WAARNEMING_BUFFERS_M = [0, 100, 250, 500, 1000]
+export const STANDAARD_WAARNEMING_BUFFER_M = 250
