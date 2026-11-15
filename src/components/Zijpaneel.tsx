@@ -3,6 +3,7 @@ import { oppervlakteHectare, formatGetal } from '../utils/geometrie'
 import type { Natura2000Status } from '../hooks/useNatura2000'
 import Natura2000Melding from './Natura2000Melding'
 import WaarnemingenPaneel from './WaarnemingenPaneel'
+import BeschermdeSoortenPaneel from './BeschermdeSoortenPaneel'
 import type { WaarnemingenStatus } from '../hooks/useWaarnemingen'
 import type { Soort } from '../types'
 
@@ -59,6 +60,9 @@ export default function Zijpaneel(props: Props) {
             </dl>
           </section>
           <Natura2000Melding status={natura2000} onOpnieuw={onNatura2000Opnieuw} />
+          {props.waarnemingen.soort === 'klaar' && props.waarnemingen.resultaat.totaal > 0 && (
+            <BeschermdeSoortenPaneel soorten={props.soorten} />
+          )}
           <WaarnemingenPaneel
             status={props.waarnemingen}
             soorten={props.soorten}

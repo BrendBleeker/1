@@ -2,17 +2,12 @@ import { useState } from 'react'
 import type { Soort, Soortgroep } from '../types'
 import { GROEP_VOLGORDE, SOORTGROEPEN } from '../utils/soortgroepen'
 import { formatDatum } from '../utils/datum'
+import { sorteerBeschermdEerst } from '../utils/bescherming'
 
 interface Props {
   soorten: Soort[]
   geselecteerdeSoort: number | null
   onSelecteer: (key: number | null) => void
-}
-
-/** Sorteervolgorde: beschermde soorten bovenaan, daarna meeste waarnemingen. */
-function sorteer(a: Soort, b: Soort): number {
-  const beschermd = Number(!!b.bescherming) - Number(!!a.bescherming)
-  return beschermd || b.aantal - a.aantal
 }
 
 /** De lijst met waargenomen soorten, optioneel gegroepeerd per soortgroep. */
@@ -24,7 +19,7 @@ export default function Soortenlijst({ soorten, geselecteerdeSoort, onSelecteer 
   const zichtbaar = soorten
     .filter((s) => !alleenBeschermd || s.bescherming)
     .filter((s) => filterGroep === 'alle' || s.groep === filterGroep)
-    .sort(sorteer)
+    .sort(sorteerBeschermdEerst) // beschermde soorten bovenaan
 
   const aantalPerGroep = (g: Soortgroep) => soorten.filter((s) => s.groep === g).length
 

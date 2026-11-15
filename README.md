@@ -13,7 +13,7 @@ Teken een gebied op de kaart en zie welke beschermde natuurgebieden en soorten e
 | 1 | Kaart met PDOK-achtergrond, gebied tekenen, oppervlakte in ha | ✅ |
 | 2 | Lagenmenu (luchtfoto, Natura 2000, NNN) en melding binnen 1 km van Natura 2000 | ✅ |
 | 3 | GBIF-waarnemingen in gebied + buffer, soortenlijst per soortgroep | ✅ |
-| 4 | Lijst beschermde soorten en soortenkalender | ⏳ |
+| 4 | Lijst beschermde soorten en soortenkalender | ✅ |
 | 5 | Printbaar conceptrapport | ⏳ |
 
 ## De app starten
@@ -57,7 +57,10 @@ In **Settings → Pages** staat de bron op *Deploy from a branch → gh-pages*.
 6. Onder **Waargenomen soorten** zie je de GBIF-waarnemingen van de laatste 10 jaar in het
    gebied plus een instelbare buffer (standaard 250 m). Klik op een soort om alleen die soort op
    de kaart te tonen. Je kunt groeperen per soortgroep en filteren.
-7. Via het **lagenmenu** rechtsboven kies je kaart of luchtfoto en zet je Natura 2000 en het
+7. Onder **Beschermde soorten** staan de gevonden soorten van de (indicatieve) startlijst,
+   met een **soortenkalender**: de maanden waarin onderzoek naar die soorten geschikt is.
+   Beschermde soorten zijn rood op de kaart en staan bovenaan de soortenlijst.
+8. Via het **lagenmenu** rechtsboven kies je kaart of luchtfoto en zet je Natura 2000 en het
    Natuurnetwerk Nederland aan of uit.
 
 ## Projectstructuur
@@ -72,8 +75,11 @@ src/
 ├── utils/
 │   ├── geometrie.ts             oppervlakte, buffers (Turf.js), getallen en afstanden opmaken
 │   ├── soortgroepen.ts          soortgroep bepalen uit de GBIF-taxonomie
+│   ├── bescherming.ts           soorten koppelen aan de lijst beschermde soorten
 │   ├── datum.ts                 datums in het Nederlands
 │   └── fetchMetHerhaling.ts     opnieuw proberen bij 'te veel verzoeken' (429)
+├── data/
+│   └── beschermde-soorten.json  INDICATIEVE startlijst beschermde soorten + onderzoeksmaanden
 ├── types.ts                     gedeelde datatypes (Soort, Waarneming, …)
 ├── services/
 │   ├── natura2000.ts            Natura 2000-gebieden ophalen (OGC API) en afstand berekenen
@@ -89,7 +95,9 @@ src/
     ├── Natura2000Melding.tsx    melding Natura 2000 (laden / fout / resultaat)
     ├── WaarnemingenPaneel.tsx   bufferkeuze, laadindicator, foutmelding, samenvatting
     ├── Soortenlijst.tsx         soortenlijst, groeperen en filteren
-    └── WaarnemingenLaag.tsx     waarnemingen als punten op de kaart
+    ├── WaarnemingenLaag.tsx     waarnemingen als punten op de kaart
+    ├── BeschermdeSoortenPaneel.tsx  gevonden beschermde soorten
+    └── Soortenkalender.tsx      tabel met onderzoeksmaanden
 ```
 
 ## Techniek
@@ -126,6 +134,19 @@ NNN-dataset; die kan een toekomstige uitbreiding zijn.
 - Bij 'te veel verzoeken' (429) wacht de app even en probeert het automatisch opnieuw.
 - Alleen waarnemingen op soortniveau, met coördinaten en zonder geografische fouten tellen mee.
 - Nederlandse namen worden per soort opgehaald en in de browser bewaard (localStorage).
+
+## Lijst beschermde soorten (indicatief!)
+
+`src/data/beschermde-soorten.json` bevat een **kleine, indicatieve startlijst** van 25 bekende
+beschermde soorten met beschermingsregime (Vogelrichtlijn / Habitatrichtlijn bijlage IV /
+nationaal) en geschikte onderzoeksmaanden. De lijst is vereenvoudigd, niet volledig, en moet
+door een ecoloog gecontroleerd worden (Omgevingswet, provinciale vrijstellingen,
+Vleermuisprotocol, kennisdocumenten BIJ12). Let op: álle inheemse vogels zijn beschermd; de
+app toont daarom ook een algemene regel voor broedvogels als er vogels zijn waargenomen.
+
+Een soort toevoegen: voeg een blok toe aan `soorten` met de wetenschappelijke naam zoals GBIF
+die gebruikt (controleer via <https://www.gbif.org/species/search>), eventuele `synoniemen`,
+`nederlandseNaam`, `regime`, `onderzoeksmaanden` (1 = januari … 12 = december) en `toelichting`.
 
 ## Mogelijke uitbreidingen
 

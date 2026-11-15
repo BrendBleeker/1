@@ -317,3 +317,63 @@ progress {
   padding: 0;
   font: inherit;
 }
+
+/* ---------- Beschermde soorten en kalender ---------- */
+.zijpaneel h3 {
+  font-size: 0.98rem;
+  margin: 1rem 0 0.25rem;
+}
+.melding-indicatief {
+  background: #fff8db;
+  border-color: #d4a017;
+  font-size: 0.9em;
+}
+.beschermd-lijst {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+.beschermd-lijst li {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--rand);
+}
+.kalender-wrapper {
+  overflow-x: auto;
+}
+.kalender {
+  border-collapse: collapse;
+  font-size: 0.78em;
+  width: 100%;
+}
+.kalender th,
+.kalender td {
+  border: 1px solid var(--rand);
+  padding: 0.15rem;
+  text-align: center;
+}
+.kalender th {
+  font-weight: 600;
+  color: var(--tekst-zacht);
+}
+.kalender .kalender-soort {
+  text-align: left;
+  min-width: 7.5rem;
+}
+.kalender td.kalender-aan {
+  background: #2e7d4f;
+  /* zorgt dat de kleur ook geprint wordt */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.kalender-toelichting {
+  font-size: 0.82em;
+  padding-left: 1rem;
+  color: var(--tekst-zacht);
+}
+.kalender-compact .kalender-soort {
+  min-width: 0;
+  width: 40%;
+}
+.kalender-compact {
+  table-layout: fixed;
+}

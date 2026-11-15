@@ -6,6 +6,7 @@ import { useNatura2000 } from './hooks/useNatura2000'
 import { useWaarnemingen } from './hooks/useWaarnemingen'
 import { STANDAARD_WAARNEMING_BUFFER_M } from './config/bronnen'
 import type { Soort } from './types'
+import { zoekBescherming } from './utils/bescherming'
 
 export default function App() {
   // Het getekende onderzoeksgebied (GeoJSON), of null als er nog niets getekend is
@@ -26,13 +27,17 @@ export default function App() {
   // Haalt automatisch GBIF-waarnemingen op voor gebied + buffer
   const waarnemingen = useWaarnemingen(gebied, bufferM)
 
-  // Soortenlijst aangevuld met Nederlandse namen
+  // Soortenlijst aangevuld met Nederlandse namen en bescherming (indicatieve startlijst)
   const soorten = useMemo<Soort[]>(() => {
     if (waarnemingen.status.soort !== 'klaar') return []
-    return waarnemingen.status.resultaat.soorten.map((s) => ({
-      ...s,
-      nederlandseNaam: waarnemingen.namen.get(s.key),
-    }))
+    return waarnemingen.status.resultaat.soorten.map((s) => {
+      const bescherming = zoekBescherming(s.wetenschappelijkeNaam)
+      return {
+        ...s,
+        nederlandseNaam: waarnemingen.namen.get(s.key) ?? bescherming?.nederlandseNaam,
+        bescherming,
+      }
+    })
   }, [waarnemingen.status, waarnemingen.namen])
 
   const soortenPerKey = useMemo(() => new Map(soorten.map((s) => [s.key, s])), [soorten])
