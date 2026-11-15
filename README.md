@@ -65,7 +65,8 @@ In **Settings → Pages** staat de bron op *Deploy from a branch → gh-pages*.
   Natura 2000 binnen 1 km, en de **habitat- en potentiecheck**: landgebruik, water, gebouwen met
   bouwjaar (optioneel gekleurd op de kaart), bomen en de soortgroepen met potentie.
 - **Soorten**: beschermde soorten met soortenkalender, **invasieve exoten** (Unielijst) en de
-  volledige soortenlijst uit GBIF (laatste 10 jaar, gebied plus instelbare buffer).
+  volledige soortenlijst uit GBIF (laatste 10 jaar, gebied plus instelbare buffer), met een
+  zoekveld op Nederlandse of Latijnse naam.
 - **Planning**: kies een datum en zie zonsopkomst/-ondergang, de onderzoeksvensters per
   soortgroep, de weersverwachting rond zonsondergang (komende 16 dagen) en welk onderzoek die
   maand past. Plus de **werkkalender**: wanneer werkzaamheden het minste risico geven.

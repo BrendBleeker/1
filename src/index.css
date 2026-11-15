@@ -978,3 +978,17 @@ input[type='date'] {
   font-size: 0.85em;
   color: var(--tekst-zacht);
 }
+
+/* Zoeken in de soortenlijst */
+.soorten-zoek {
+  width: 100%;
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  margin: 0.4rem 0 0.2rem;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  background: white;
+}
+.zoek-resultaat {
+  margin: 0.1rem 0 0.4rem;
+}
