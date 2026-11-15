@@ -63,7 +63,9 @@ In **Settings → Pages** staat de bron op *Deploy from a branch → gh-pages*.
 8. Klik op **Conceptrapport maken** (bovenaan het zijpaneel, zodra alle gegevens geladen
    zijn). Vul eventueel een projectnaam in en kies **Afdrukken / opslaan als PDF**.
    Op een telefoon: Delen → Afdrukken → (knijp-zoom op de preview) → Opslaan als PDF.
-9. Via het **lagenmenu** rechtsboven kies je kaart of luchtfoto en zet je Natura 2000 en het
+9. Op de **telefoon** staat de kaart bovenaan en scrolt de pagina gewoon. Met
+   **▲ Kaart verbergen** klap je de kaart in voor meer ruimte, met **▼ Kaart tonen** komt hij terug.
+10. Via het **lagenmenu** rechtsboven kies je kaart of luchtfoto en zet je Natura 2000 en het
    Natuurnetwerk Nederland aan of uit.
 
 ## Projectstructuur
@@ -93,6 +95,7 @@ src/
 │   └── useWaarnemingen.ts       idem voor GBIF-waarnemingen
 └── components/
     ├── Kaart.tsx                Leaflet-kaart met lagenmenu en 1 km-zone
+    ├── KaartGrootteBijwerken.tsx  kaart opnieuw laten meten na in-/uitklappen (mobiel)
     ├── TekenGereedschap.tsx     tekenknoppen (Geoman)
     ├── Zijpaneel.tsx            informatiepaneel naast de kaart, met legenda
     ├── Natura2000Melding.tsx    melding Natura 2000 (laden / fout / resultaat)

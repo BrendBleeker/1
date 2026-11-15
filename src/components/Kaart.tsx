@@ -11,6 +11,7 @@ import 'leaflet/dist/leaflet.css'
 import type { Feature, MultiPolygon, Polygon } from 'geojson'
 import TekenGereedschap from './TekenGereedschap'
 import WaarnemingenLaag from './WaarnemingenLaag'
+import KaartGrootteBijwerken from './KaartGrootteBijwerken'
 import type { Soort, Waarneming } from '../types'
 import {
   BRT_ACHTERGRONDKAART,
@@ -31,6 +32,8 @@ interface Props {
   waarnemingen: Waarneming[]
   soorten: Map<number, Soort>
   geselecteerdeSoort: number | null
+  /** Verandert als de kaart van grootte verandert (mobiel in-/uitklappen) */
+  grootteSleutel: string
 }
 
 /** De kaart van Nederland met lagenmenu en tekengereedschap. */
@@ -41,6 +44,7 @@ export default function Kaart({
   waarnemingen,
   soorten,
   geselecteerdeSoort,
+  grootteSleutel,
 }: Props) {
   // De 1 km-zone rond het getekende gebied (alleen ter informatie op de kaart)
   const zone = useMemo(
@@ -133,6 +137,7 @@ export default function Kaart({
 
       <ScaleControl imperial={false} position="bottomright" />
       <TekenGereedschap onGebiedGewijzigd={onGebiedGewijzigd} />
+      <KaartGrootteBijwerken sleutel={grootteSleutel} />
     </MapContainer>
   )
 }

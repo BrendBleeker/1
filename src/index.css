@@ -85,15 +85,51 @@ body,
 }
 
 /* Op een smal scherm (telefoon) paneel boven de kaart */
+/* Knop om de kaart in/uit te klappen: alleen op de telefoon */
+.kaart-schakelaar {
+  display: none;
+}
+
+/* ---------- Telefoon: kaart bovenaan, inklapbaar, hele pagina scrolt ---------- */
 @media (max-width: 700px) {
   .app {
     flex-direction: column;
+    height: auto;
+    min-height: 100%;
+  }
+  .kaart-container {
+    order: 1;
+    flex: none;
+    height: 45vh;
+    transition: height 0.2s;
+  }
+  /* Nog niets getekend: kaart groter, zodat tekenen makkelijk is */
+  .app.zonder-gebied .kaart-container {
+    height: 65vh;
+  }
+  .app.kaart-ingeklapt .kaart-container {
+    height: 0;
+    overflow: hidden;
+  }
+  .kaart-schakelaar {
+    order: 2;
+    display: block;
+    width: 100%;
+    padding: 0.55rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent);
+    background: white;
+    border: none;
+    border-top: 1px solid var(--rand);
+    border-bottom: 1px solid var(--rand);
+    cursor: pointer;
   }
   .zijpaneel {
+    order: 3;
     width: 100%;
-    max-height: 40%;
+    overflow: visible;
     border-right: none;
-    border-bottom: 1px solid var(--rand);
   }
 }
 

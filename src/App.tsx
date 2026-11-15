@@ -18,6 +18,8 @@ export default function App() {
   const [geselecteerdeSoort, setGeselecteerdeSoort] = useState<number | null>(null)
   // Of de rapportpagina openstaat
   const [toonRapport, setToonRapport] = useState(false)
+  // Alleen op de telefoon: kaart ingeklapt, zodat er meer ruimte is voor de gegevens
+  const [kaartIngeklapt, setKaartIngeklapt] = useState(false)
 
   // useCallback zorgt dat de kaart deze functie niet steeds opnieuw krijgt
   const bijGebiedGewijzigd = useCallback((nieuw: Feature<Polygon> | null) => {
@@ -47,7 +49,13 @@ export default function App() {
 
   return (
     <>
-      <div className="app">
+      <div
+        className={
+          'app' +
+          (gebied ? ' met-gebied' : ' zonder-gebied') +
+          (kaartIngeklapt ? ' kaart-ingeklapt' : '')
+        }
+      >
         <Zijpaneel
           gebied={gebied}
           natura2000={natura2000.status}
@@ -73,8 +81,18 @@ export default function App() {
             }
             soorten={soortenPerKey}
             geselecteerdeSoort={geselecteerdeSoort}
+            grootteSleutel={`${!!gebied}-${kaartIngeklapt}`}
           />
         </main>
+        {/* Alleen zichtbaar op de telefoon (zie index.css) */}
+        <button
+          type="button"
+          className="kaart-schakelaar"
+          onClick={() => setKaartIngeklapt((k) => !k)}
+          aria-expanded={!kaartIngeklapt}
+        >
+          {kaartIngeklapt ? '▼ Kaart tonen' : '▲ Kaart verbergen'}
+        </button>
       </div>
 
       {/* Het rapport ligt als laag over de app, zodat de kaart (met tekening) blijft bestaan */}
