@@ -96,3 +96,120 @@ body,
     border-bottom: 1px solid var(--rand);
   }
 }
+
+/* ---------- Meldingen ---------- */
+.melding {
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border-left: 4px solid;
+  margin: 0.5rem 0;
+}
+.melding-info {
+  background: #eef4fb;
+  border-color: #3b7dd8;
+}
+.melding-ok {
+  background: #eaf6ee;
+  border-color: var(--accent);
+}
+.melding-waarschuwing {
+  background: #fff4e5;
+  border-color: #e67e22;
+}
+.melding-fout {
+  background: #fdecea;
+  border-color: #c0392b;
+}
+.melding button {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #c0392b;
+  background: white;
+  color: #c0392b;
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.n2k-lijst {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+}
+.n2k-lijst li {
+  margin-bottom: 0.4rem;
+}
+
+.label {
+  display: inline-block;
+  padding: 0 0.4rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+  color: white;
+}
+.label-rood {
+  background: #c0392b;
+}
+.label-oranje {
+  background: #d35400;
+}
+
+.voetnoot {
+  font-size: 0.85em;
+  color: var(--tekst-zacht);
+}
+
+/* Laadindicator: draaiend rondje */
+.spinner {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  border: 2px solid #3b7dd8;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -0.1em;
+  animation: draaien 0.8s linear infinite;
+}
+@keyframes draaien {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* NNN-laag omkleuren (groen → paars), zodat hij niet wegvalt tegen de groene bossen */
+.laag-nnn {
+  filter: hue-rotate(160deg) saturate(2.5);
+}
+
+/* Legenda */
+.legenda {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.legenda li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.legenda-vak {
+  display: inline-block;
+  width: 1.4rem;
+  height: 0.9rem;
+  border-radius: 2px;
+}
+.legenda-gebied {
+  background: rgba(211, 84, 0, 0.15);
+  border: 2px solid var(--gebied);
+}
+.legenda-zone {
+  border: 1.5px dashed var(--gebied);
+}
+.legenda-n2k {
+  background: #c9e26a;
+  border: 1px solid #8aa62a;
+}
+.legenda-nnn {
+  background: #e4a6e6;
+  border: 1px solid #b05bb5;
+}

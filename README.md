@@ -11,7 +11,7 @@ Teken een gebied op de kaart en zie welke beschermde natuurgebieden en soorten e
 | Fase | Inhoud | Status |
 | ---- | ------ | ------ |
 | 1 | Kaart met PDOK-achtergrond, gebied tekenen, oppervlakte in ha | ✅ |
-| 2 | Lagenmenu (luchtfoto, Natura 2000) en melding binnen 1 km van Natura 2000 | ⏳ |
+| 2 | Lagenmenu (luchtfoto, Natura 2000, NNN) en melding binnen 1 km van Natura 2000 | ✅ |
 | 3 | GBIF-waarnemingen in gebied + buffer, soortenlijst per soortgroep | ⏳ |
 | 4 | Lijst beschermde soorten en soortenkalender | ⏳ |
 | 5 | Printbaar conceptrapport | ⏳ |
@@ -49,9 +49,13 @@ In **Settings → Pages** staat de bron op *Deploy from a branch → gh-pages*.
 1. Zoom in op het plangebied.
 2. Kies links op de kaart **Rechthoek tekenen** of **Polygoon tekenen**.
 3. Klik de hoekpunten aan; sluit een polygoon af door op het eerste punt te klikken.
-4. Het zijpaneel toont de oppervlakte in hectare.
+4. Het zijpaneel toont de oppervlakte in hectare en meldt of het gebied in of binnen 1 km van
+   een Natura 2000-gebied ligt (met naam, nummer, afstand en Vogel-/Habitatrichtlijn).
+   De zone van 1 km staat als oranje stippellijn op de kaart.
 5. Met de overige knoppen kun je het gebied bewerken, verslepen of verwijderen.
    Een nieuw getekend gebied vervangt het vorige.
+6. Via het **lagenmenu** rechtsboven kies je kaart of luchtfoto en zet je Natura 2000 en het
+   Natuurnetwerk Nederland aan of uit.
 
 ## Projectstructuur
 
@@ -63,11 +67,16 @@ src/
 ├── config/
 │   └── bronnen.ts               alle URL's van externe databronnen op één plek
 ├── utils/
-│   └── geometrie.ts             oppervlakte berekenen (Turf.js), getallen opmaken
+│   └── geometrie.ts             oppervlakte, buffers (Turf.js), getallen en afstanden opmaken
+├── services/
+│   └── natura2000.ts            Natura 2000-gebieden ophalen (OGC API) en afstand berekenen
+├── hooks/
+│   └── useNatura2000.ts         zoekt automatisch opnieuw als het gebied verandert
 └── components/
-    ├── Kaart.tsx                Leaflet-kaart met PDOK-achtergrond
+    ├── Kaart.tsx                Leaflet-kaart met lagenmenu en 1 km-zone
     ├── TekenGereedschap.tsx     tekenknoppen (Geoman)
-    └── Zijpaneel.tsx            informatiepaneel naast de kaart
+    ├── Zijpaneel.tsx            informatiepaneel naast de kaart, met legenda
+    └── Natura2000Melding.tsx    melding Natura 2000 (laden / fout / resultaat)
 ```
 
 ## Techniek
@@ -83,6 +92,15 @@ src/
 | Bron | Dienst | Gebruikt voor |
 | ---- | ------ | ------------- |
 | PDOK BRT-Achtergrondkaart (Kadaster) | WMTS, `https://service.pdok.nl/kadaster/brt-achtergrondkaart/wmts/v2_0` | Achtergrondkaart |
+| PDOK Luchtfoto RGB (Beeldmateriaal Nederland) | WMTS, `https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0`, laag `Actueel_orthoHR` | Luchtfoto |
+| Natura 2000 (RVO) | WMS, `https://service.pdok.nl/rvo/natura2000/wms/v1_0`, laag `natura2000` | Weergave op de kaart |
+| Natura 2000 (RVO) | OGC API Features, `https://api.pdok.nl/rvo/natura2000/ogc/v1/collections/natura2000/items` | Controle: in of binnen 1 km? |
+| Natuurnetwerk Nederland (provincies, CC0) | WMS, `https://service.pdok.nl/provincies/natuurnetwerk-nederland/wms/v1_0`, laag `PS.ProtectedSite` | Alleen weergave |
+
+**Over het Natuurnetwerk Nederland (NNN):** er is een landelijke WMS (kaartbeelden) via PDOK,
+maar geen WFS of OGC API. De app kan NNN daarom wel tonen, maar niet automatisch controleren
+of het gebied erin ligt. Beoordeel dit op de kaart. BIJ12 publiceert ook een landelijke
+NNN-dataset; die kan een toekomstige uitbreiding zijn.
 
 ## Mogelijke uitbreidingen
 
